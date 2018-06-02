@@ -1,5 +1,5 @@
 rootProject.name = 'kotlin-query-language'
 include 'common'
 include 'java'
-include 'js'
+include 'js-node'
 
