@@ -2,16 +2,27 @@
 
 ## Basic CRUD
 ```kotlin
-class Post(val id: Int, val text: String)
+class Post(val text: String, val id: Int)
+```
+
+### Create
+```kotlin
+val query = KQueryInsert(Post::class) {
+    // At least one required
+    +Post("Some content")
+    
+    // Can add more for multi insert
+    +Post("Another post")
+}
 ```
 
 ### Read
 ```kotlin
-val query = KQuery(Post::class) {
+val query = KQuerySelect(Post::class) {
     // Projection
     // If not provided, entire record is returned
     // All chosen field must be all pluses or all minuses
-    select {
+    fields {
         // Pluses return only those fields
         +::text
         
@@ -25,9 +36,10 @@ val query = KQuery(Post::class) {
     }
     
     // Optional sorting
-    order {
+    // Only one plus/minus per field
+    sort {
         +::id // Ascending
-        -::id // Descending
+        -::text // Descending
     }
     
     // Optional max number to return
