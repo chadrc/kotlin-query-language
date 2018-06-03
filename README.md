@@ -24,23 +24,23 @@ val query = KQuerySelect(Post::class) {
     // All chosen field must be all pluses or all minuses
     fields {
         // Pluses return only those fields
-        +::text
+        +it::text
         
         // Minuses return every other field
-        -::text
+        -it::text
     }
     
     // Optional conditions
     // If not provided all records are returned
     where {
-        ::id eq 1
+        it::id eq 1
     }
     
     // Optional sorting
     // Only one plus/minus per field
     sort {
-        +::id // Ascending
-        -::text // Descending
+        +it::id // Ascending
+        -it::text // Descending
     }
     
     // Optional max number to return
@@ -55,7 +55,7 @@ val query = KQuerySelect(Post::class) {
 ```kotlin
 val query = KQueryCount(Post::class) {
     where {
-        ::text eq "Hello"
+        it::text eq "Hello"
     }
 }
 ```
@@ -65,15 +65,15 @@ val query = KQueryCount(Post::class) {
 val query = KQueryUpdate(Post::class) {
     // Update all records
     set {
-        ::text to "Update text"
+        it::text to "Update text"
     }
     
     // Conditional update
     where {
-        ::id eq 1
+        it::id eq 1
         
         set {
-            ::text to "Conditional update"
+            it::text to "Conditional update"
         }
     }
 }
@@ -86,7 +86,7 @@ val query = KQueryDelete(Post::class) {
     
     // Conditional delete
     where {
-        ::id eq 1
+        it::id eq 1
     }
     
     // Delete all

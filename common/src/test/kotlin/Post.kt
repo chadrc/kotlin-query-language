@@ -1,1 +1,1 @@
-class Post(val text: String, val id: Int)
+class Post(val text: String, val id: Int = -1)

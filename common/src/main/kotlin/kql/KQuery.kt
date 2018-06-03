@@ -1,9 +1,12 @@
 package kql
 
-import kotlin.reflect.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
 class KQueryInsert<T: Any>(kClass: KClass<T>, init: KQueryInsertBuilder<T>.() -> Unit) {
     private val insertBuilder = KQueryInsertBuilder<T>()
+
+    val records = insertBuilder.records
 
     init {
         insertBuilder.init()
@@ -11,10 +14,12 @@ class KQueryInsert<T: Any>(kClass: KClass<T>, init: KQueryInsertBuilder<T>.() ->
 }
 
 class KQueryInsertBuilder<T: Any> {
-    private val records = ArrayList<T>()
+    private val _records = ArrayList<T>()
+
+    val records get() = _records
 
     fun add(record: T) {
-        records.add(record)
+        _records.add(record)
     }
 
     operator fun T.unaryPlus() {
