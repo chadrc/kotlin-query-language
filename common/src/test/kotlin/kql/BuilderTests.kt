@@ -14,4 +14,15 @@ class BuilderTests {
 
         assertEquals(2, query.records.size)
     }
+
+    @Test
+    fun testInsertWithList() {
+        val query = KQueryInsert(Post::class) {
+            +List(10) {
+                Post("Post $it")
+            }
+        }
+
+        assertEquals(10, query.records.size)
+    }
 }

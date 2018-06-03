@@ -18,12 +18,12 @@ class KQueryInsertBuilder<T: Any> {
 
     val records get() = _records
 
-    fun add(record: T) {
-        _records.add(record)
+    operator fun T.unaryPlus() {
+        _records.add(this)
     }
 
-    operator fun T.unaryPlus() {
-        add(this)
+    operator fun Collection<T>.unaryPlus() {
+        _records.addAll(this)
     }
 }
 
