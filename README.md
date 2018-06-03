@@ -31,6 +31,7 @@ val query = KQuerySelect(Post::class) {
     }
     
     // Optional conditions
+    // If not provided all records are returned
     where {
         ::id eq 1
     }
@@ -47,6 +48,15 @@ val query = KQuerySelect(Post::class) {
     
     // Optional offset to start at
     offset(100)
+}
+```
+
+#### Count
+```kotlin
+val query = KQueryCount(Post::class) {
+    where {
+        ::text eq "Hello"
+    }
 }
 ```
 
@@ -72,7 +82,7 @@ val query = KQueryUpdate(Post::class) {
 ### Delete
 ```kotlin
 val query = KQueryDelete(Post::class) {
-    // No-Op by default
+    // Deletes nothing by default
     
     // Conditional delete
     where {
