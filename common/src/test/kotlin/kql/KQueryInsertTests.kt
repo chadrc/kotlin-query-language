@@ -4,7 +4,7 @@ import Post
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class BuilderTests {
+class KQueryInsertTests {
     @Test
     fun testBuildInsertQuery() {
         val query = KQueryInsert(Post::class) {
