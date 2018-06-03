@@ -49,3 +49,37 @@ val query = KQuerySelect(Post::class) {
     offset(100)
 }
 ```
+
+### Update
+```kotlin
+val query = KQueryUpdate(Post::class) {
+    // Update all records
+    set {
+        ::text to "Update text"
+    }
+    
+    // Conditional update
+    where {
+        ::id eq 1
+        
+        set {
+            ::text to "Conditional update"
+        }
+    }
+}
+```
+
+### Delete
+```kotlin
+val query = KQueryDelete(Post::class) {
+    // No-Op by default
+    
+    // Conditional delete
+    where {
+        ::id eq 1
+    }
+    
+    // Delete all
+    all()
+}
+```
