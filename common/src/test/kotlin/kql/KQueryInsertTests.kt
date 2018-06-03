@@ -25,4 +25,14 @@ class KQueryInsertTests {
 
         assertEquals(10, query.records.size)
     }
+
+    @Test
+    fun testInsertHelper() {
+        val query = kqlInsert<Post> {
+            +Post("First Post")
+            +Post("Second Post")
+        }
+
+        assertEquals(1, query.records.size)
+    }
 }
