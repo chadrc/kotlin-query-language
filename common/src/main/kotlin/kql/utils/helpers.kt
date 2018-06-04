@@ -1,5 +1,6 @@
 package kql.utils
 
+import kql.exceptions.NoStubConstructorException
 import kotlin.reflect.KClass
 
 fun <T : Any> KClass<T>.zeroParamConstructors() =
@@ -11,10 +12,7 @@ fun <T : Any> KClass<T>.firstZeroParamConstructor() = try {
     null
 }
 
-fun <T : Any> KClass<T>.stubInstanceAction(action: (it: T) -> Unit) = {
-    val stubConstructor = this.firstZeroParamConstructor()
-    if (stubConstructor != null) {
-        val it = stubConstructor.callBy(HashMap())
-        action(it)
-    }
+fun <T : Any> KClass<T>.stubInstanceAction(action: (it: T) -> Unit) {
+    val stubConstructor = this.firstZeroParamConstructor() ?: throw NoStubConstructorException()
+    action(stubConstructor.callBy(HashMap()))
 }

@@ -13,7 +13,6 @@ class KQuerySelect<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBui
     val fields: List<KProperty<*>>
         get() {
             val allProperties = kClass.members.filterIsInstance<KProperty<*>>()
-            println(allProperties)
             val clause = selectBuilder.fieldClause ?: return allProperties
 
             return if (clause.excludedFields.size > 0) {
