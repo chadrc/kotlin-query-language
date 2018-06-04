@@ -10,11 +10,9 @@ class KQueryFieldProjectionBuilder<T : Any> {
     val excludedFields get() = _excludeFields
 
     operator fun KProperty<*>.unaryPlus() {
-        println(this)
         if (_excludeFields.size > 0) {
             throw Exception("Can only include fields (+) or exclude fields (-) not both, in a single field projection.")
         }
-        println(this)
         _includeFields.add(this)
     }
 
