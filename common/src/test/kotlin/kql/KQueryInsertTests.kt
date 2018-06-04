@@ -33,6 +33,6 @@ class KQueryInsertTests {
             +Post("Second Post")
         }
 
-        assertEquals(1, query.records.size)
+        assertEquals(2, query.records.size)
     }
 }
