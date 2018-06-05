@@ -2,7 +2,7 @@
 
 ## Basic CRUD
 ```kotlin
-class Post(val text: String, val id: Int)
+class Post(val id: Int, val text: String, val published: Date, val topic: String)
 ```
 
 ### Create
@@ -91,5 +91,87 @@ val query = KQueryDelete(Post::class) {
     
     // Delete all
     all()
+}
+```
+
+#### Short Forms
+```kotlin
+val insert = kqlInsert<Post> {}
+val select = kqlSelect<Post> {}
+val count = kqlCount<Post> {}
+val update = kqlUpdate<Post> {}
+val delete = kqlDelete<Post> {}
+```
+
+## Where Clause Operators
+```kotlin
+val jan1 = Date("Jan 1 2018")
+val jan30 = Date("Jan 30 2018")
+```
+### Comparison
+```kotlin
+val select = kqlSelect<Post> {
+    where {
+        it::id eq 1
+        it::published gt jan1
+        it::published gte jan1
+        it::published lt jan30
+        it::published lte jan30
+        it::published inRange jan1..jan30
+        it::topic inSet listOf("Food", "Photography", "Music")
+        it::topic ne "Technology"
+        it::topic notInSet listOf("Food", "Photography", "Music")
+        
+        // Pattern matching, format will depend on implementation
+        it::topic matches "T.*"
+    }
+}
+```
+### Logical
+Logical AND, all conditions in block must be true.
+```kotlin
+val select = kqlSelect<Post> {
+    where {
+        all {
+            it::topic ne "Technology"
+            it::published inRange jan1..jan30
+        }
+    }
+}
+```
+Logical OR, only one condition in block must be true.
+```kotlin
+val select = kqlSelect<Post> {
+    where {
+        any {
+            it::topic eq "Technology"
+            it::published eq jan30
+        }
+    }
+}
+```
+Logical NOT, negates conditions on block.
+```kotlin
+val select = kqlSelect<Post> {
+    where {
+        not {
+            it::published inRange jan1..jan30 
+        }
+    }
+}
+```
+Nesting logical blocks
+Find all posts published between Jan 1 and Jan 30, and have either Technology or Food as their topic.
+```kotlin
+val select = kqlSelect<Post> {
+    where {
+        all {
+            it::published inRange jan1..jan30
+            any {
+                it::topic eq "Technology"
+                it::topic eq "Food"
+            }
+        }
+    }
 }
 ```
