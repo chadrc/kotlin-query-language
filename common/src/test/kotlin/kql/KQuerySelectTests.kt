@@ -6,7 +6,7 @@ import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.exceptions.NoStubConstructorException
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.fail
+import kotlin.test.assertFailsWith
 
 class KQuerySelectTests {
     @Test
@@ -45,32 +45,24 @@ class KQuerySelectTests {
 
     @Test
     fun testCannotSpecifyPlusAndMinusFields() {
-        try {
+        assertFailsWith<CannotSubtractAndAddFieldsException> {
             KQuerySelect(Post::class) {
                 fields {
                     +it::text
                     -it::id
                 }
             }
-        } catch (exception: CannotSubtractAndAddFieldsException) {
-            return
         }
-
-        fail("Excepted ${NoStubConstructorException::class.simpleName} to be thrown.")
     }
 
     @Test
     fun testSelectBuilderWithInvalidModel() {
-        try {
+        assertFailsWith<NoStubConstructorException> {
             KQuerySelect(Author::class) {
                 fields {
                     +it::firstName
                 }
             }
-        } catch (exception: NoStubConstructorException) {
-            return
         }
-
-        fail("Excepted ${NoStubConstructorException::class.simpleName} to be thrown.")
     }
 }
