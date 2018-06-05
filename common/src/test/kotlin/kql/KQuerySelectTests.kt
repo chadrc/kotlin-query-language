@@ -2,6 +2,7 @@ package kql
 
 import Author
 import Post
+import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.exceptions.NoStubConstructorException
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -40,6 +41,22 @@ class KQuerySelectTests {
         }
 
         assertEquals(3, query.fields.size)
+    }
+
+    @Test
+    fun testCannotSpecifyPlusAndMinusFields() {
+        try {
+            KQuerySelect(Post::class) {
+                fields {
+                    +it::text
+                    -it::id
+                }
+            }
+        } catch (exception: CannotSubtractAndAddFieldsException) {
+            return
+        }
+
+        fail("Excepted ${NoStubConstructorException::class.simpleName} to be thrown.")
     }
 
     @Test

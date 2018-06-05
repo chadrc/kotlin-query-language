@@ -1,5 +1,6 @@
 package kql.clauses
 
+import kql.exceptions.CannotSubtractAndAddFieldsException
 import kotlin.reflect.KProperty
 
 class KQueryFieldProjectionBuilder<T : Any> {
@@ -11,14 +12,14 @@ class KQueryFieldProjectionBuilder<T : Any> {
 
     operator fun KProperty<*>.unaryPlus() {
         if (_excludeFields.size > 0) {
-            throw Exception("Can only include fields (+) or exclude fields (-) not both, in a single field projection.")
+            throw CannotSubtractAndAddFieldsException()
         }
         _includeFields.add(this)
     }
 
     operator fun KProperty<*>.unaryMinus() {
         if (_includeFields.size > 0) {
-            throw Exception("Can only include fields (+) or exclude fields (-) not both, in a single field projection.")
+            throw CannotSubtractAndAddFieldsException()
         }
         _excludeFields.add(this)
     }
