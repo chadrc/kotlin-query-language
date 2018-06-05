@@ -19,7 +19,7 @@ val query = KQueryInsert(Post::class) {
 ### Read
 ```kotlin
 val query = KQuerySelect(Post::class) {
-    // Projection
+    // Optional Projection
     // If not provided, entire record is returned
     // All chosen field must be all pluses or all minuses
     fields {
