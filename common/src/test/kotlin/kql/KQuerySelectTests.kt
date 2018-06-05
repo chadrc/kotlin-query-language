@@ -32,6 +32,17 @@ class KQuerySelectTests {
     }
 
     @Test
+    fun testMinusField() {
+        val query = kqlSelect<Post> {
+            fields {
+                -it::id
+            }
+        }
+
+        assertEquals(3, query.fields.size)
+    }
+
+    @Test
     fun testSelectBuilderWithInvalidModel() {
         try {
             KQuerySelect(Author::class) {
