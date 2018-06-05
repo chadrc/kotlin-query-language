@@ -22,6 +22,8 @@ class KQuerySelect<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBui
             }
         }
 
+    val conditions: List<KQueryWhereClauseBuilder.Condition> get() = selectBuilder.whereClause?.conditions ?: listOf()
+
     init {
         selectBuilder.init()
     }

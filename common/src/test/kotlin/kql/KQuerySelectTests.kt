@@ -65,4 +65,15 @@ class KQuerySelectTests {
             }
         }
     }
+
+    @Test
+    fun testWhereClause() {
+        val query = kqlSelect<Post> {
+            where {
+                it::id eq 0
+            }
+        }
+
+        assertEquals(1, query.conditions.size)
+    }
 }
