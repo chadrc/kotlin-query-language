@@ -175,3 +175,28 @@ val select = kqlSelect<Post> {
     }
 }
 ```
+## Sub-Object Field Selection
+Selecting fields on a sub-object in same document/record
+```kotlin
+val select = kqlSelect<Post> {
+    fields {
+        it::author // Selects all fields on author
+        it::author with fieldSet {
+            it::firstName
+            it::lastName
+        }
+    }
+}
+```
+Selecting fields on a sub-object in different document/record
+```kotlin
+val select = kqlSelect<Post> {
+    fields { post -> 
+        post::author with join<Author> {
+            where { author ->
+                author::id eq post::authorId
+            }
+        }
+    }
+}
+```
