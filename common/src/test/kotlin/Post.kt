@@ -3,5 +3,6 @@ class Post(
         val text: String = "",
         val sticky: Boolean = false,
         val authorId: Int = -1,
-        val created: Long = 0
+        val topic: String = "",
+        val published: Long = 0
 )

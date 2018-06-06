@@ -113,17 +113,18 @@ val jan30 = Date("Jan 30 2018")
 val select = kqlSelect<Post> {
     where {
         it::id eq 1
+        it::topic ne "Technology"
         it::published gt jan1
         it::published gte jan1
         it::published lt jan30
         it::published lte jan30
-        it::published inRange jan1..jan30
-        it::topic inSet listOf("Food", "Photography", "Music")
-        it::topic ne "Technology"
-        it::topic notInSet listOf("Food", "Photography", "Music")
+        it::published within jan1..jan30
+        it::published notWithin jan1..jan30
+        it::topic within listOf("Food", "Photography", "Music")
+        it::topic notWithin listOf("Food", "Photography", "Music")
         
         // Pattern matching, format will depend on implementation
-        it::topic matches "T.*"
+        it::text matches "T.*"
     }
 }
 ```

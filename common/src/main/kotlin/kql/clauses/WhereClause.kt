@@ -4,7 +4,15 @@ import kotlin.reflect.KProperty
 
 class KQueryWhereClauseBuilder<T : Any> {
     enum class Operator {
-        Equals
+        Equals,
+        NotEquals,
+        LessThan,
+        LessThanOrEquals,
+        GreaterThan,
+        GreaterThanOrEquals,
+        Within,
+        NotWithin,
+        Matches
     }
 
     class Condition(val prop: KProperty<*>, val op: Operator, val value: Any)
@@ -13,39 +21,47 @@ class KQueryWhereClauseBuilder<T : Any> {
 
     val conditions get() = _conditions
 
-    infix fun KProperty<Boolean>.eq(b: Boolean) {
-        _conditions.add(Condition(this, Operator.Equals, b))
+    infix fun <T : Comparable<T>> KProperty<T>.eq(v: T) {
+        _conditions.add(Condition(this, Operator.Equals, v))
     }
 
-    infix fun KProperty<Byte>.eq(n: Byte) {
-        _conditions.add(Condition(this, Operator.Equals, n))
+    infix fun <T : Comparable<T>> KProperty<T>.ne(v: T) {
+        _conditions.add(Condition(this, Operator.NotEquals, v))
     }
 
-    infix fun KProperty<Short>.eq(n: Short) {
-        _conditions.add(Condition(this, Operator.Equals, n))
+    infix fun <T : Comparable<T>> KProperty<T>.gt(v: T) {
+        _conditions.add(Condition(this, Operator.LessThan, v))
     }
 
-    infix fun KProperty<Int>.eq(n: Int) {
-        _conditions.add(Condition(this, Operator.Equals, n))
+    infix fun <T : Comparable<T>> KProperty<T>.gte(v: T) {
+        _conditions.add(Condition(this, Operator.GreaterThanOrEquals, v))
     }
 
-    infix fun KProperty<Long>.eq(n: Long) {
-        _conditions.add(Condition(this, Operator.Equals, n))
+    infix fun <T : Comparable<T>> KProperty<T>.lt(v: T) {
+        _conditions.add(Condition(this, Operator.LessThan, v))
     }
 
-    infix fun KProperty<Float>.eq(n: Float) {
-        _conditions.add(Condition(this, Operator.Equals, n))
+    infix fun <T : Comparable<T>> KProperty<T>.lte(v: T) {
+        _conditions.add(Condition(this, Operator.LessThanOrEquals, v))
     }
 
-    infix fun KProperty<Double>.eq(n: Double) {
-        _conditions.add(Condition(this, Operator.Equals, n))
+    infix fun <T : Comparable<T>> KProperty<T>.within(v: ClosedRange<T>) {
+        _conditions.add(Condition(this, Operator.Within, v))
     }
 
-    infix fun KProperty<Char>.eq(s: Char) {
-        _conditions.add(Condition(this, Operator.Equals, s))
+    infix fun <T : Comparable<T>> KProperty<T>.within(v: Collection<T>) {
+        _conditions.add(Condition(this, Operator.Within, v))
     }
 
-    infix fun KProperty<String>.eq(s: String) {
-        _conditions.add(Condition(this, Operator.Equals, s))
+    infix fun <T : Comparable<T>> KProperty<T>.notWithin(v: ClosedRange<T>) {
+        _conditions.add(Condition(this, Operator.NotWithin, v))
+    }
+
+    infix fun <T : Comparable<T>> KProperty<T>.notWithin(v: Collection<T>) {
+        _conditions.add(Condition(this, Operator.NotWithin, v))
+    }
+
+    infix fun KProperty<String>.matches(s: String) {
+        _conditions.add(Condition(this, Operator.Matches, s))
     }
 }

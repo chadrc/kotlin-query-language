@@ -40,7 +40,7 @@ class KQuerySelectTests {
             }
         }
 
-        assertEquals(4, query.fields.size)
+        assertEquals(5, query.fields.size)
     }
 
     @Test
@@ -75,5 +75,34 @@ class KQuerySelectTests {
         }
 
         assertEquals(1, query.conditions.size)
+    }
+
+    @Test
+    fun testAllWhereComparisonOperators() {
+        val minDate = 1514764800000
+        val maxDate = 1517270400000
+
+        val query = kqlSelect<Post> {
+            where {
+                it::id eq 0
+                it::id ne 0
+
+                it::published gt minDate
+                it::published gte minDate
+
+                it::published lt maxDate
+                it::published lte maxDate
+
+                it::published within minDate..maxDate
+                it::published notWithin minDate..maxDate
+
+                it::topic within listOf("Food", "Photography", "Music")
+                it::topic notWithin listOf("Food", "Photography", "Music")
+
+                it::text matches "Tutorial"
+            }
+        }
+
+        assertEquals(11, query.conditions.size)
     }
 }
