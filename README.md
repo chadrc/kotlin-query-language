@@ -135,7 +135,7 @@ val select = kqlSelect<Post> {
     where {
         all {
             it::topic ne "Technology"
-            it::published inRange jan1..jan30
+            it::published within jan1..jan30
         }
     }
 }
