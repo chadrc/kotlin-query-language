@@ -10,22 +10,37 @@ import kotlin.reflect.KProperty
 class KQuerySelect<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBuilder<T>.() -> Unit) {
     private val selectBuilder: KQuerySelectBuilder<T> = KQuerySelectBuilder(kClass)
 
-    val fields: List<KProperty<*>>
+    class Field(val prop: KProperty<*>, val subFields: List<Field>? = null)
+
+    val fields: List<Field>
         get() {
             val allProperties = kClass.members.filterIsInstance<KProperty<*>>()
-            val clause = selectBuilder.fieldClause ?: return allProperties
+            val clause = selectBuilder.fieldClause ?: return allProperties.map { Field(it) }
 
-            return if (clause.excludedFields.size > 0) {
-                allProperties.filter { prop -> clause.excludedFields.find { it.name == prop.name } == null }
+            val props = if (clause.excludedFields.size > 0) {
+                allProperties.filter { prop -> clause.excludedFields.find { it.prop.name == prop.name } == null }
             } else {
-                allProperties.filter { prop -> clause.includedFields.find { it.name == prop.name } != null }
+                allProperties.filter { prop -> clause.includedFields.find { it.prop.name == prop.name } != null }
             }
+
+            return props.map { Field(it) }
         }
 
     val conditions: List<KQueryWhereClauseBuilder.Condition> get() = selectBuilder.whereClause?.conditions ?: listOf()
 
     init {
         selectBuilder.init()
+    }
+
+    private fun getProperties(kClass: KClass<T>) : List<KProperty<*>> {
+        val allProperties = kClass.members.filterIsInstance<KProperty<*>>()
+        val clause = selectBuilder.fieldClause ?: return allProperties
+
+        return if (clause.excludedFields.size > 0) {
+            allProperties.filter { prop -> clause.excludedFields.find { it.prop.name == prop.name } == null }
+        } else {
+            allProperties.filter { prop -> clause.includedFields.find { it.prop.name == prop.name } != null }
+        }
     }
 }
 

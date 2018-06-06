@@ -184,7 +184,7 @@ Selecting fields on a sub-object in same document/record
 val select = kqlSelect<Post> {
     fields {
         it::author // Selects all fields on author
-        it::author with fieldSet {
+        it::author withFields {
             it::firstName
             it::lastName
         }
