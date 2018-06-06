@@ -156,7 +156,7 @@ Logical NOT, negates conditions on block.
 val select = kqlSelect<Post> {
     where {
         not {
-            it::published inRange jan1..jan30 
+            it::published within jan1..jan30 
         }
     }
 }
@@ -167,7 +167,7 @@ Find all posts published between Jan 1 and Jan 30, and have either Technology or
 val select = kqlSelect<Post> {
     where {
         all {
-            it::published inRange jan1..jan30
+            it::published within jan1..jan30
             any {
                 it::topic eq "Technology"
                 it::topic eq "Food"
