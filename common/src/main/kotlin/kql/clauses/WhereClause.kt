@@ -1,8 +1,10 @@
 package kql.clauses
 
+import kql.utils.stubInstanceAction
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-class KQueryWhereClauseBuilder<T : Any> {
+class KQueryWhereClauseBuilder<T : Any>(private val kClass: KClass<T>) {
     enum class Operator {
         Equals,
         NotEquals,
@@ -12,10 +14,12 @@ class KQueryWhereClauseBuilder<T : Any> {
         GreaterThanOrEquals,
         Within,
         NotWithin,
-        Matches
+        Matches,
+        All,
+        Any
     }
 
-    class Condition(val prop: KProperty<*>, val op: Operator, val value: Any)
+    class Condition(val prop: KProperty<*>?, val op: Operator, val value: Any)
 
     private val _conditions: ArrayList<Condition> = ArrayList()
 
@@ -63,5 +67,17 @@ class KQueryWhereClauseBuilder<T : Any> {
 
     infix fun KProperty<String>.matches(s: String) {
         _conditions.add(Condition(this, Operator.Matches, s))
+    }
+
+    fun all(init: KQueryWhereClauseBuilder<T>.(it: T) -> Unit) {
+        val whereClauseBuilder = KQueryWhereClauseBuilder(kClass)
+        kClass.stubInstanceAction { whereClauseBuilder.init(it) }
+        _conditions.add(Condition(null, Operator.All, whereClauseBuilder.conditions))
+    }
+
+    fun any(init: KQueryWhereClauseBuilder<T>.(it: T) -> Unit) {
+        val whereClauseBuilder = KQueryWhereClauseBuilder(kClass)
+        kClass.stubInstanceAction { whereClauseBuilder.init(it) }
+        _conditions.add(Condition(null, Operator.Any, whereClauseBuilder.conditions))
     }
 }

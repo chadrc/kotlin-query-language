@@ -152,6 +152,8 @@ val select = kqlSelect<Post> {
 }
 ```
 Logical NOT, negates conditions on block.
+
+*** Provisional ***
 ```kotlin
 val select = kqlSelect<Post> {
     where {

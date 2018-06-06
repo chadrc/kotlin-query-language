@@ -2,6 +2,7 @@ package kql
 
 import NoStubModel
 import Post
+import kql.clauses.KQueryWhereClauseBuilder
 import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.exceptions.NoStubConstructorException
 import kotlin.test.Test
@@ -104,5 +105,33 @@ class KQuerySelectTests {
         }
 
         assertEquals(11, query.conditions.size)
+    }
+
+    @Test
+    fun testWhereLogicOperators() {
+        val minDate = 1514764800000
+        val maxDate = 1517270400000
+
+        val query = kqlSelect<Post> {
+            where {
+                all {
+                    it::topic eq "Food"
+                    it::text matches "Tutorial"
+                }
+
+                any {
+                    it::topic eq "Food"
+                    it::published within minDate..maxDate
+                }
+            }
+        }
+
+        assertEquals(2, query.conditions.size)
+
+        val allList = query.conditions[0].value as List<KQueryWhereClauseBuilder.Condition>
+        assertEquals(2, (allList.size))
+
+        val anyList = query.conditions[1].value as List<KQueryWhereClauseBuilder.Condition>
+        assertEquals(2, (anyList.size))
     }
 }

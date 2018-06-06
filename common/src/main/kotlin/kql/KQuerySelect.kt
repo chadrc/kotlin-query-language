@@ -48,7 +48,7 @@ class KQuerySelectBuilder<T : Any>(private val kClass: KClass<T>) {
     }
 
     fun where(init: KQueryWhereClauseBuilder<T>.(it: T) -> Unit) {
-        _whereClauseBuilder = KQueryWhereClauseBuilder()
+        _whereClauseBuilder = KQueryWhereClauseBuilder(kClass)
         kClass.stubInstanceAction { _whereClauseBuilder?.init(it) }
     }
 

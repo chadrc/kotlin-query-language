@@ -15,7 +15,7 @@ class KQueryCountBuilder<T : Any>(private val kClass: KClass<T>) {
     private var whereClauseBuilder: KQueryWhereClauseBuilder<T>? = null
 
     fun where(init: KQueryWhereClauseBuilder<T>.(it: T) -> Unit) {
-        whereClauseBuilder = KQueryWhereClauseBuilder()
+        whereClauseBuilder = KQueryWhereClauseBuilder(kClass)
         val primary = kClass.constructors.find { it.parameters.isEmpty() }
         if (primary != null && primary.parameters.isEmpty()) {
             val it = primary.call()
