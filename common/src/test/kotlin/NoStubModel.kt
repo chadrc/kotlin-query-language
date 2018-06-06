@@ -1,0 +1,1 @@
+class NoStubModel(val id: Int)

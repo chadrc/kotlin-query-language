@@ -1,6 +1,6 @@
 package kql
 
-import Author
+import NoStubModel
 import Post
 import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.exceptions.NoStubConstructorException
@@ -58,9 +58,9 @@ class KQuerySelectTests {
     @Test
     fun testSelectBuilderWithInvalidModel() {
         assertFailsWith<NoStubConstructorException> {
-            KQuerySelect(Author::class) {
+            KQuerySelect(NoStubModel::class) {
                 fields {
-                    +it::firstName
+                    +it::id
                 }
             }
         }
