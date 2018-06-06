@@ -40,7 +40,7 @@ class KQuerySelectTests {
             }
         }
 
-        assertEquals(3, query.fields.size)
+        assertEquals(4, query.fields.size)
     }
 
     @Test

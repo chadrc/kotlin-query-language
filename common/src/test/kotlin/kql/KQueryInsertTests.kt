@@ -8,8 +8,8 @@ class KQueryInsertTests {
     @Test
     fun testBuildInsertQuery() {
         val query = KQueryInsert(Post::class) {
-            +Post("First Post")
-            +Post("Second Post")
+            +Post(text = "First Post")
+            +Post(text = "Second Post")
         }
 
         assertEquals(2, query.records.size)
@@ -19,7 +19,7 @@ class KQueryInsertTests {
     fun testInsertWithList() {
         val query = KQueryInsert(Post::class) {
             +List(10) {
-                Post("Post $it")
+                Post(text = "Post $it")
             }
         }
 
@@ -29,8 +29,8 @@ class KQueryInsertTests {
     @Test
     fun testInsertHelper() {
         val query = kqlInsert<Post> {
-            +Post("First Post")
-            +Post("Second Post")
+            +Post(text = "First Post")
+            +Post(text = "Second Post")
         }
 
         assertEquals(2, query.records.size)
