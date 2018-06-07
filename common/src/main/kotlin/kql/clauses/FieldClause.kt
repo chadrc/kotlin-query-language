@@ -41,7 +41,7 @@ class KQueryFieldProjectionBuilder<T : Any> : FieldSelector {
             crossinline init: KQueryFieldProjectionBuilder<P>.(it: P) -> Unit
     ) {
         val builder = KQueryFieldProjectionBuilder<P>()
-        stubInstanceAction<P> { builder.init(it) }
+        P::class.stubInstanceAction { builder.init(it) }
         includedFields.add(FieldProjection(this, builder.includedFields, builder.excludedFields))
     }
 }
