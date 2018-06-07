@@ -4,18 +4,24 @@ import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.utils.stubInstanceAction
 import kotlin.reflect.KProperty
 
-class KQueryFieldProjectionBuilder<T : Any> {
-    class FieldProjection(
-            val prop: KProperty<*>,
-            val includeSubFields: ArrayList<FieldProjection>? = null,
-            val excludeSubFields: ArrayList<FieldProjection>? = null
-    )
+interface FieldSelector {
+    val includedFields: ArrayList<FieldProjection>?
+    val excludedFields: ArrayList<FieldProjection>?
+}
+
+class FieldProjection(
+        val prop: KProperty<*>,
+        override val includedFields: ArrayList<FieldProjection>? = null,
+        override val excludedFields: ArrayList<FieldProjection>? = null
+) : FieldSelector
+
+class KQueryFieldProjectionBuilder<T : Any> : FieldSelector {
 
     private val _includeFields: ArrayList<FieldProjection> = ArrayList()
     private val _excludeFields: ArrayList<FieldProjection> = ArrayList()
 
-    val includedFields get() = _includeFields
-    val excludedFields get() = _excludeFields
+    override val includedFields get() = _includeFields
+    override val excludedFields get() = _excludeFields
 
     operator fun KProperty<*>.unaryPlus() {
         if (_excludeFields.size > 0) {
@@ -31,9 +37,11 @@ class KQueryFieldProjectionBuilder<T : Any> {
         _excludeFields.add(FieldProjection(this))
     }
 
-    infix fun <P : Any> KProperty<P>.withFields(init: KQueryFieldProjectionBuilder<P>.(it: P) -> Unit) {
+    inline infix fun <reified P : Any> KProperty<P>.withFields(
+            crossinline init: KQueryFieldProjectionBuilder<P>.(it: P) -> Unit
+    ) {
         val builder = KQueryFieldProjectionBuilder<P>()
         stubInstanceAction<P> { builder.init(it) }
-        _includeFields.add(FieldProjection(this, builder.includedFields, builder.excludedFields))
+        includedFields.add(FieldProjection(this, builder.includedFields, builder.excludedFields))
     }
 }

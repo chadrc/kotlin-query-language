@@ -2,7 +2,6 @@ package kql
 
 import NoStubModel
 import Post
-import kql.clauses.KQueryFieldProjectionBuilder
 import kql.clauses.KQueryWhereClauseBuilder
 import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.exceptions.NoStubConstructorException
@@ -42,7 +41,7 @@ class KQuerySelectTests {
             }
         }
 
-        assertEquals(5, query.fields.size)
+        assertEquals(6, query.fields.size)
     }
 
     @Test
@@ -81,7 +80,7 @@ class KQuerySelectTests {
 
         assertEquals(1, query.fields.size)
         val authorSet = query.fields[0]
-        assertEquals(1, authorSet.fields.size)
+        assertEquals(2, authorSet.subFields?.size)
     }
 
     @Test

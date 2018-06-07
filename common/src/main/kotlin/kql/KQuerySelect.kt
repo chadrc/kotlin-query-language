@@ -1,5 +1,6 @@
 package kql
 
+import kql.clauses.FieldSelector
 import kql.clauses.KQueryFieldProjectionBuilder
 import kql.clauses.KQuerySortClauseBuilder
 import kql.clauses.KQueryWhereClauseBuilder
@@ -17,13 +18,7 @@ class KQuerySelect<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBui
             val allProperties = kClass.members.filterIsInstance<KProperty<*>>()
             val clause = selectBuilder.fieldClause ?: return allProperties.map { Field(it) }
 
-            val props = if (clause.excludedFields.size > 0) {
-                allProperties.filter { prop -> clause.excludedFields.find { it.prop.name == prop.name } == null }
-            } else {
-                allProperties.filter { prop -> clause.includedFields.find { it.prop.name == prop.name } != null }
-            }
-
-            return props.map { Field(it) }
+            return getProperties(kClass, clause)
         }
 
     val conditions: List<KQueryWhereClauseBuilder.Condition> get() = selectBuilder.whereClause?.conditions ?: listOf()
@@ -32,14 +27,30 @@ class KQuerySelect<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBui
         selectBuilder.init()
     }
 
-    private fun getProperties(kClass: KClass<T>) : List<KProperty<*>> {
+    private fun <T : Any> getProperties(kClass: KClass<T>, selector: FieldSelector): List<Field> {
         val allProperties = kClass.members.filterIsInstance<KProperty<*>>()
-        val clause = selectBuilder.fieldClause ?: return allProperties
 
-        return if (clause.excludedFields.size > 0) {
-            allProperties.filter { prop -> clause.excludedFields.find { it.prop.name == prop.name } == null }
+        // First, determine which fields will be used
+        val props = if (selector.excludedFields?.size ?: 0 > 0) {
+            allProperties.filter { prop -> selector.excludedFields?.find { it.prop.name == prop.name } == null }
         } else {
-            allProperties.filter { prop -> clause.includedFields.find { it.prop.name == prop.name } != null }
+            allProperties.filter { prop -> selector.includedFields?.find { it.prop.name == prop.name } != null }
+        }
+
+        // Transform fields, if the field included a sub object selected
+        return props.map { prop ->
+            val fieldProp = selector.includedFields?.find { it.prop.name == prop.name }
+            if (fieldProp?.includedFields != null
+                    || fieldProp?.excludedFields != null) {
+                val classType = prop.returnType.classifier as? KClass<Any>
+                if (classType != null) {
+                    Field(prop, getProperties(classType, fieldProp))
+                } else {
+                    Field(prop)
+                }
+            } else {
+                Field(prop)
+            }
         }
     }
 }
