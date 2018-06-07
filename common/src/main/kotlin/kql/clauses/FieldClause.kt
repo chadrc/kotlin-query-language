@@ -47,6 +47,5 @@ class KQueryFieldProjectionBuilder<T : Any> : FieldSelector {
 
         pClass.stubInstanceAction { builder.init(it) }
         includedFields.add(FieldProjection(this, builder.includedFields, builder.excludedFields))
-
     }
 }
