@@ -2,6 +2,7 @@ package kql.clauses
 
 import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.utils.stubInstanceAction
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 interface FieldSelector {
@@ -37,11 +38,15 @@ class KQueryFieldProjectionBuilder<T : Any> : FieldSelector {
         _excludeFields.add(FieldProjection(this))
     }
 
-    inline infix fun <reified P : Any> KProperty<P>.withFields(
-            crossinline init: KQueryFieldProjectionBuilder<P>.(it: P) -> Unit
+    infix fun <P : Any> KProperty<P>.withFields(
+            init: KQueryFieldProjectionBuilder<P>.(it: P) -> Unit
     ) {
         val builder = KQueryFieldProjectionBuilder<P>()
-        P::class.stubInstanceAction { builder.init(it) }
+        val pClass = this.returnType.classifier as? KClass<P>
+                ?: throw Error("Property ${this.name} of type ${this.returnType} not of a class.")
+
+        pClass.stubInstanceAction { builder.init(it) }
         includedFields.add(FieldProjection(this, builder.includedFields, builder.excludedFields))
+
     }
 }
