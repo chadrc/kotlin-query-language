@@ -2,21 +2,23 @@ package kql.clauses
 
 import kotlin.reflect.KProperty
 
-class SortClauseBuilder<T : Any> {
-    private enum class Direction {
-        Ascending,
-        Descending
-    }
+enum class Direction {
+    Ascending,
+    Descending
+}
 
-    private class Sort(val prop: KProperty<*>, val dir: Direction)
+class Sort(val prop: KProperty<*>, val dir: Direction)
 
-    private val sorts: ArrayList<Sort> = ArrayList()
+class SortClauseBuilder {
+    private val _sorts: ArrayList<Sort> = ArrayList()
+
+    val sorts get() = _sorts
 
     operator fun KProperty<*>.unaryPlus() {
-        sorts.add(Sort(this, Direction.Ascending))
+        _sorts.add(Sort(this, Direction.Ascending))
     }
 
     operator fun KProperty<*>.unaryMinus() {
-        sorts.add(Sort(this, Direction.Descending))
+        _sorts.add(Sort(this, Direction.Descending))
     }
 }

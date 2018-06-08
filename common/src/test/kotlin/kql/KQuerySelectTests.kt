@@ -152,4 +152,16 @@ class KQuerySelectTests {
         val anyList = query.conditions[1].value as List<WhereClauseBuilder.Condition>
         assertEquals(2, (anyList.size))
     }
+
+    @Test
+    fun testSortClause() {
+        val query = kqlSelect<Post> {
+            sort {
+                +it::published
+                -it::author
+            }
+        }
+
+        assertEquals(2, query.sorts.size)
+    }
 }
