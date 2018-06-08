@@ -16,7 +16,7 @@ class FieldProjection(
         override val excludedFields: ArrayList<FieldProjection>? = null
 ) : FieldSelector
 
-class FieldProjectionBuilder : FieldSelector {
+class FieldClauseBuilder : FieldSelector {
 
     private val _includeFields: ArrayList<FieldProjection> = ArrayList()
     private val _excludeFields: ArrayList<FieldProjection> = ArrayList()
@@ -39,9 +39,9 @@ class FieldProjectionBuilder : FieldSelector {
     }
 
     infix fun <P : Any> KProperty<P?>.withFields(
-            init: FieldProjectionBuilder.(it: P) -> Unit
+            init: FieldClauseBuilder.(it: P) -> Unit
     ) {
-        val builder = FieldProjectionBuilder()
+        val builder = FieldClauseBuilder()
         @Suppress("UNCHECKED_CAST")
         val pClass = this.returnType.classifier as? KClass<P>
                 ?: throw Error("Property ${this.name} of type ${this.returnType} not of a class.")
