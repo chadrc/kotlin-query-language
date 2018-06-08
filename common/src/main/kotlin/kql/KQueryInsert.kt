@@ -1,8 +1,6 @@
 package kql
 
-import kotlin.reflect.KClass
-
-class KQueryInsert<T : Any>(kClass: KClass<T>, init: KQueryInsertBuilder<T>.() -> Unit) {
+class KQueryInsert<T : Any>(init: KQueryInsertBuilder<T>.() -> Unit) {
     private val insertBuilder = KQueryInsertBuilder<T>()
 
     val records = insertBuilder.records

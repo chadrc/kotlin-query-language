@@ -42,6 +42,7 @@ class KQuerySelect<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBui
             val fieldProp = selector.includedFields?.find { it.prop.name == prop.name }
             if (fieldProp?.includedFields != null
                     || fieldProp?.excludedFields != null) {
+                @Suppress("UNCHECKED_CAST")
                 val classType = prop.returnType.classifier as? KClass<Any>
                 if (classType != null) {
                     Field(prop, getProperties(classType, fieldProp))
@@ -56,7 +57,7 @@ class KQuerySelect<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBui
 }
 
 class KQuerySelectBuilder<T : Any>(private val kClass: KClass<T>) {
-    private var _fieldProjectionBuilder: KQueryFieldProjectionBuilder<T>? = null
+    private var _fieldProjectionBuilder: KQueryFieldProjectionBuilder? = null
     private var _whereClauseBuilder: KQueryWhereClauseBuilder<T>? = null
     private var _sortClauseBuilder: KQuerySortClauseBuilder<T>? = null
     private var _limit: Int = -1
@@ -68,7 +69,7 @@ class KQuerySelectBuilder<T : Any>(private val kClass: KClass<T>) {
     val limit get() = _limit
     val offset get() = _offset
 
-    fun fields(init: KQueryFieldProjectionBuilder<T>.(it: T) -> Unit) {
+    fun fields(init: KQueryFieldProjectionBuilder.(it: T) -> Unit) {
         _fieldProjectionBuilder = KQueryFieldProjectionBuilder()
         kClass.stubInstanceAction { _fieldProjectionBuilder?.init(it) }
     }
