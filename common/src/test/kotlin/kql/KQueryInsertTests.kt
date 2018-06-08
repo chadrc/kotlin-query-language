@@ -1,6 +1,7 @@
 package kql
 
 import Post
+import kql.statements.KQueryInsert
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

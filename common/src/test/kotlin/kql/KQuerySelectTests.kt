@@ -6,6 +6,7 @@ import kql.clauses.WhereClauseBuilder
 import kql.exceptions.CannotSortSamePropertyTwice
 import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.exceptions.NoStubConstructorException
+import kql.statements.KQuerySelect
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

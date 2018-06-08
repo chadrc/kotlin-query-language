@@ -1,4 +1,4 @@
-package kql
+package kql.statements
 
 import kql.clauses.*
 import kql.utils.stubInstanceAction
