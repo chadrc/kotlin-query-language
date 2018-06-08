@@ -1,6 +1,6 @@
 package kql.statements
 
-class KQueryInsert<T : Any>(init: KQueryInsertBuilder<T>.() -> Unit) {
+class Insert<T : Any>(init: KQueryInsertBuilder<T>.() -> Unit) {
     private val insertBuilder = KQueryInsertBuilder<T>()
 
     val records = insertBuilder.records

@@ -3,16 +3,17 @@ package kql.statements
 import kql.clauses.WhereClauseBuilder
 import kotlin.reflect.KClass
 
-class KQueryCount<T : Any>(kClass: KClass<T>, init: KQueryCountBuilder<T>.() -> Unit) {
-    private val countBuilder = KQueryCountBuilder(kClass)
+class Delete<T : Any>(kClass: KClass<T>, init: KQueryDeleteBuilder<T>.() -> Unit) {
+    private val deleteBuilder = KQueryDeleteBuilder(kClass)
 
     init {
-        countBuilder.init()
+        deleteBuilder.init()
     }
 }
 
-class KQueryCountBuilder<T : Any>(private val kClass: KClass<T>) {
+class KQueryDeleteBuilder<T : Any>(private val kClass: KClass<T>) {
     private var whereClauseBuilder: WhereClauseBuilder<T>? = null
+    private var all: Boolean = false
 
     fun where(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
         whereClauseBuilder = WhereClauseBuilder(kClass)
@@ -21,5 +22,9 @@ class KQueryCountBuilder<T : Any>(private val kClass: KClass<T>) {
             val it = primary.call()
             whereClauseBuilder?.init(it)
         }
+    }
+
+    fun all() {
+        all = true
     }
 }

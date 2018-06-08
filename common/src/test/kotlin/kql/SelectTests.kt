@@ -6,15 +6,15 @@ import kql.clauses.WhereClauseBuilder
 import kql.exceptions.CannotSortSamePropertyTwice
 import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.exceptions.NoStubConstructorException
-import kql.statements.KQuerySelect
+import kql.statements.Select
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class KQuerySelectTests {
+class SelectTests {
     @Test
     fun testSelectBuilder() {
-        val query = KQuerySelect(Post::class) {
+        val query = Select(Post::class) {
             fields {
                 +it::id
                 +it::text
@@ -49,7 +49,7 @@ class KQuerySelectTests {
     @Test
     fun testCannotSpecifyPlusAndMinusFields() {
         assertFailsWith<CannotSubtractAndAddFieldsException> {
-            KQuerySelect(Post::class) {
+            Select(Post::class) {
                 fields {
                     +it::text
                     -it::id
@@ -61,7 +61,7 @@ class KQuerySelectTests {
     @Test
     fun testSelectBuilderWithInvalidModel() {
         assertFailsWith<NoStubConstructorException> {
-            KQuerySelect(NoStubModel::class) {
+            Select(NoStubModel::class) {
                 fields {
                     +it::id
                 }

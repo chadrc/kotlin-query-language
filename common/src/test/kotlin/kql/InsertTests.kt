@@ -1,14 +1,14 @@
 package kql
 
 import Post
-import kql.statements.KQueryInsert
+import kql.statements.Insert
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class KQueryInsertTests {
+class InsertTests {
     @Test
     fun testBuildInsertQuery() {
-        val query = KQueryInsert<Post> {
+        val query = Insert<Post> {
             +Post(text = "First Post")
             +Post(text = "Second Post")
         }
@@ -18,7 +18,7 @@ class KQueryInsertTests {
 
     @Test
     fun testInsertWithList() {
-        val query = KQueryInsert<Post> {
+        val query = Insert<Post> {
             +List(10) {
                 Post(text = "Post $it")
             }

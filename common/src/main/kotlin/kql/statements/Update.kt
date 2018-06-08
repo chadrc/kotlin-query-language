@@ -4,7 +4,7 @@ import kql.clauses.MutationClauseBuilder
 import kql.clauses.WhereClauseBuilder
 import kotlin.reflect.KClass
 
-class KQueryUpdate<T : Any>(kClass: KClass<T>, init: KQueryUpdateBuilder<T>.() -> Unit) {
+class Update<T : Any>(kClass: KClass<T>, init: KQueryUpdateBuilder<T>.() -> Unit) {
     private val updateBuilder = KQueryUpdateBuilder(kClass)
 
     init {
