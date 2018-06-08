@@ -2,7 +2,13 @@
 
 ## Basic CRUD
 ```kotlin
-class Post(val id: Int, val text: String, val published: Date, val topic: String)
+class Post(
+    val id: Int,
+    val text: String,
+    val published: Date,
+    val topic: String,
+    val views: Int
+)
 ```
 
 ### Create
@@ -63,12 +69,35 @@ val query = Count(Post::class) {
 ### Update
 ```kotlin
 val query = Update(Post::class) {
-    // Update all records
-    set {
-        it::text to "Update text"
-    }
+
+    // Set field value
+    it::text to "Update text"
+
+    // Special value, to be interpreted by DB
+    it::publish to kqlCurrentDate
+
+    // Unset value
+    -it::topic
+    unset(it::topic)
+
+    // 2 ways to do relative math operations values
+    it::views inc 2
+    it::views += 2
+
+    it::views dec 2
+    it::views -= 2
+
+    it::ranking mul 2
+    it::ranking *= 2
+
+    it::ranking div 2
+    it::ranking /= 2
+
+    it::ranking rem 2
+    it::ranking %= 2
     
     // Update only records that pass conditions
+    // Update all records, if not provided
     where {
         it::id eq 1
     }
