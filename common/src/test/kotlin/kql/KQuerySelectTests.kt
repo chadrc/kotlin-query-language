@@ -3,6 +3,7 @@ package kql
 import NoStubModel
 import Post
 import kql.clauses.WhereClauseBuilder
+import kql.exceptions.CannotSortSamePropertyTwice
 import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.exceptions.NoStubConstructorException
 import kotlin.test.Test
@@ -163,5 +164,17 @@ class KQuerySelectTests {
         }
 
         assertEquals(2, query.sorts.size)
+    }
+
+    @Test
+    fun testCannotSortSamePropTwice() {
+        assertFailsWith<CannotSortSamePropertyTwice> {
+            kqlSelect<Post> {
+                sort {
+                    +it::published
+                    -it::published
+                }
+            }
+        }
     }
 }
