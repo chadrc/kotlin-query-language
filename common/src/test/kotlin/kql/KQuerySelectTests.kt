@@ -177,4 +177,22 @@ class KQuerySelectTests {
             }
         }
     }
+
+    @Test
+    fun testLimit() {
+        val query = kqlSelect<Post> {
+            limit(10)
+        }
+
+        assertEquals(query.limit, 10)
+    }
+
+    @Test
+    fun testOffset() {
+        val query = kqlSelect<Post> {
+            offset(10)
+        }
+
+        assertEquals(query.offset, 10)
+    }
 }

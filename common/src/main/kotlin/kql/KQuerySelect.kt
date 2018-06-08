@@ -22,6 +22,10 @@ class KQuerySelect<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBui
 
     val sorts: List<Sort> get() = selectBuilder.sortClause?.sorts ?: listOf()
 
+    val limit get() = selectBuilder.limit
+
+    val offset get() = selectBuilder.offset
+
     init {
         selectBuilder.init()
     }
