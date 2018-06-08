@@ -5,8 +5,8 @@ import kql.utils.stubInstanceAction
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-class Select<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBuilder<T>.() -> Unit) {
-    private val selectBuilder: KQuerySelectBuilder<T> = KQuerySelectBuilder(kClass)
+class Select<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>.() -> Unit) {
+    private val selectBuilder: SelectBuilder<T> = SelectBuilder(kClass)
 
     class Field(val prop: KProperty<*>, val subFields: List<Field>? = null)
 
@@ -59,7 +59,7 @@ class Select<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBuilder<T
     }
 }
 
-class KQuerySelectBuilder<T : Any>(private val kClass: KClass<T>) {
+class SelectBuilder<T : Any>(private val kClass: KClass<T>) {
     private var _fieldProjectionBuilder: FieldProjectionBuilder? = null
     private var _whereClauseBuilder: WhereClauseBuilder<T>? = null
     private var _sortClauseBuilder: SortClauseBuilder? = null

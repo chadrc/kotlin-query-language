@@ -4,15 +4,15 @@ import kql.clauses.MutationClauseBuilder
 import kql.clauses.WhereClauseBuilder
 import kotlin.reflect.KClass
 
-class Update<T : Any>(kClass: KClass<T>, init: KQueryUpdateBuilder<T>.() -> Unit) {
-    private val updateBuilder = KQueryUpdateBuilder(kClass)
+class Update<T : Any>(kClass: KClass<T>, init: UpdateBuilder<T>.() -> Unit) {
+    private val updateBuilder = UpdateBuilder(kClass)
 
     init {
         updateBuilder.init()
     }
 }
 
-class KQueryUpdateBuilder<T : Any>(private val kClass: KClass<T>) {
+class UpdateBuilder<T : Any>(private val kClass: KClass<T>) {
     private var mutationClauseBuilder: MutationClauseBuilder<T>? = null
     private var whereClauseBuilder: WhereClauseBuilder<T>? = null
 

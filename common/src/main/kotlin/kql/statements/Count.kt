@@ -3,15 +3,15 @@ package kql.statements
 import kql.clauses.WhereClauseBuilder
 import kotlin.reflect.KClass
 
-class Count<T : Any>(kClass: KClass<T>, init: KQueryCountBuilder<T>.() -> Unit) {
-    private val countBuilder = KQueryCountBuilder(kClass)
+class Count<T : Any>(kClass: KClass<T>, init: CountBuilder<T>.() -> Unit) {
+    private val countBuilder = CountBuilder(kClass)
 
     init {
         countBuilder.init()
     }
 }
 
-class KQueryCountBuilder<T : Any>(private val kClass: KClass<T>) {
+class CountBuilder<T : Any>(private val kClass: KClass<T>) {
     private var whereClauseBuilder: WhereClauseBuilder<T>? = null
 
     fun where(init: WhereClauseBuilder<T>.(it: T) -> Unit) {

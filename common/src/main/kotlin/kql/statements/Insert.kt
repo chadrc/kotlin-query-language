@@ -1,7 +1,7 @@
 package kql.statements
 
-class Insert<T : Any>(init: KQueryInsertBuilder<T>.() -> Unit) {
-    private val insertBuilder = KQueryInsertBuilder<T>()
+class Insert<T : Any>(init: InsertBuilder<T>.() -> Unit) {
+    private val insertBuilder = InsertBuilder<T>()
 
     val records = insertBuilder.records
 
@@ -10,7 +10,7 @@ class Insert<T : Any>(init: KQueryInsertBuilder<T>.() -> Unit) {
     }
 }
 
-class KQueryInsertBuilder<T : Any> {
+class InsertBuilder<T : Any> {
     private val _records = ArrayList<T>()
 
     val records get() = _records
