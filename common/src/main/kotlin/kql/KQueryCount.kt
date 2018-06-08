@@ -1,6 +1,6 @@
 package kql
 
-import kql.clauses.KQueryWhereClauseBuilder
+import kql.clauses.WhereClauseBuilder
 import kotlin.reflect.KClass
 
 class KQueryCount<T : Any>(kClass: KClass<T>, init: KQueryCountBuilder<T>.() -> Unit) {
@@ -12,10 +12,10 @@ class KQueryCount<T : Any>(kClass: KClass<T>, init: KQueryCountBuilder<T>.() -> 
 }
 
 class KQueryCountBuilder<T : Any>(private val kClass: KClass<T>) {
-    private var whereClauseBuilder: KQueryWhereClauseBuilder<T>? = null
+    private var whereClauseBuilder: WhereClauseBuilder<T>? = null
 
-    fun where(init: KQueryWhereClauseBuilder<T>.(it: T) -> Unit) {
-        whereClauseBuilder = KQueryWhereClauseBuilder(kClass)
+    fun where(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
+        whereClauseBuilder = WhereClauseBuilder(kClass)
         val primary = kClass.constructors.find { it.parameters.isEmpty() }
         if (primary != null && primary.parameters.isEmpty()) {
             val it = primary.call()

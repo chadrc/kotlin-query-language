@@ -4,7 +4,7 @@ import kql.utils.stubInstanceAction
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-class KQueryWhereClauseBuilder<T : Any>(private val kClass: KClass<T>) {
+class WhereClauseBuilder<T : Any>(private val kClass: KClass<T>) {
     enum class Operator {
         Equals,
         NotEquals,
@@ -69,14 +69,14 @@ class KQueryWhereClauseBuilder<T : Any>(private val kClass: KClass<T>) {
         _conditions.add(Condition(this, Operator.Matches, s))
     }
 
-    fun all(init: KQueryWhereClauseBuilder<T>.(it: T) -> Unit) {
-        val whereClauseBuilder = KQueryWhereClauseBuilder(kClass)
+    fun all(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
+        val whereClauseBuilder = WhereClauseBuilder(kClass)
         kClass.stubInstanceAction { whereClauseBuilder.init(it) }
         _conditions.add(Condition(null, Operator.All, whereClauseBuilder.conditions))
     }
 
-    fun any(init: KQueryWhereClauseBuilder<T>.(it: T) -> Unit) {
-        val whereClauseBuilder = KQueryWhereClauseBuilder(kClass)
+    fun any(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
+        val whereClauseBuilder = WhereClauseBuilder(kClass)
         kClass.stubInstanceAction { whereClauseBuilder.init(it) }
         _conditions.add(Condition(null, Operator.Any, whereClauseBuilder.conditions))
     }

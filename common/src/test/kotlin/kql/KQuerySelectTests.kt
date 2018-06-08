@@ -2,7 +2,7 @@ package kql
 
 import NoStubModel
 import Post
-import kql.clauses.KQueryWhereClauseBuilder
+import kql.clauses.WhereClauseBuilder
 import kql.exceptions.CannotSubtractAndAddFieldsException
 import kql.exceptions.NoStubConstructorException
 import kotlin.test.Test
@@ -145,11 +145,11 @@ class KQuerySelectTests {
         assertEquals(2, query.conditions.size)
 
         @Suppress("UNCHECKED_CAST")
-        val allList = query.conditions[0].value as List<KQueryWhereClauseBuilder.Condition>
+        val allList = query.conditions[0].value as List<WhereClauseBuilder.Condition>
         assertEquals(2, (allList.size))
 
         @Suppress("UNCHECKED_CAST")
-        val anyList = query.conditions[1].value as List<KQueryWhereClauseBuilder.Condition>
+        val anyList = query.conditions[1].value as List<WhereClauseBuilder.Condition>
         assertEquals(2, (anyList.size))
     }
 }

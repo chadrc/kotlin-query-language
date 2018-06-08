@@ -2,7 +2,7 @@ package kql.clauses
 
 import kotlin.reflect.KProperty
 
-class KQueryMutationClauseBuilder<T : Any> {
+class MutationClauseBuilder<T : Any> {
     private class Assignment<T>(val prop: KProperty<T>, val value: T)
 
     private val assignments = ArrayList<Assignment<*>>()

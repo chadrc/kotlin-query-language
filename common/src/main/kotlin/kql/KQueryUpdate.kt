@@ -1,7 +1,7 @@
 package kql
 
-import kql.clauses.KQueryMutationClauseBuilder
-import kql.clauses.KQueryWhereClauseBuilder
+import kql.clauses.MutationClauseBuilder
+import kql.clauses.WhereClauseBuilder
 import kotlin.reflect.KClass
 
 class KQueryUpdate<T : Any>(kClass: KClass<T>, init: KQueryUpdateBuilder<T>.() -> Unit) {
@@ -13,11 +13,11 @@ class KQueryUpdate<T : Any>(kClass: KClass<T>, init: KQueryUpdateBuilder<T>.() -
 }
 
 class KQueryUpdateBuilder<T : Any>(private val kClass: KClass<T>) {
-    private var mutationClauseBuilder: KQueryMutationClauseBuilder<T>? = null
-    private var whereClauseBuilder: KQueryWhereClauseBuilder<T>? = null
+    private var mutationClauseBuilder: MutationClauseBuilder<T>? = null
+    private var whereClauseBuilder: WhereClauseBuilder<T>? = null
 
-    fun set(init: KQueryMutationClauseBuilder<T>.(it: T) -> Unit) {
-        mutationClauseBuilder = KQueryMutationClauseBuilder()
+    fun set(init: MutationClauseBuilder<T>.(it: T) -> Unit) {
+        mutationClauseBuilder = MutationClauseBuilder()
         val primary = kClass.constructors.find { it.parameters.isEmpty() }
         if (primary != null && primary.parameters.isEmpty()) {
             val it = primary.call()
@@ -25,8 +25,8 @@ class KQueryUpdateBuilder<T : Any>(private val kClass: KClass<T>) {
         }
     }
 
-    fun where(init: KQueryWhereClauseBuilder<T>.(it: T) -> Unit) {
-        whereClauseBuilder = KQueryWhereClauseBuilder(kClass)
+    fun where(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
+        whereClauseBuilder = WhereClauseBuilder(kClass)
         val primary = kClass.constructors.find { it.parameters.isEmpty() }
         if (primary != null && primary.parameters.isEmpty()) {
             val it = primary.call()

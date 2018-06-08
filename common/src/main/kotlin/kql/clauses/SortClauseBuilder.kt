@@ -2,7 +2,7 @@ package kql.clauses
 
 import kotlin.reflect.KProperty
 
-class KQuerySortClauseBuilder<T : Any> {
+class SortClauseBuilder<T : Any> {
     private enum class Direction {
         Ascending,
         Descending

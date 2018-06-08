@@ -1,9 +1,9 @@
 package kql
 
+import kql.clauses.FieldProjectionBuilder
 import kql.clauses.FieldSelector
-import kql.clauses.KQueryFieldProjectionBuilder
-import kql.clauses.KQuerySortClauseBuilder
-import kql.clauses.KQueryWhereClauseBuilder
+import kql.clauses.SortClauseBuilder
+import kql.clauses.WhereClauseBuilder
 import kql.utils.stubInstanceAction
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -21,7 +21,7 @@ class KQuerySelect<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBui
             return getProperties(kClass, clause)
         }
 
-    val conditions: List<KQueryWhereClauseBuilder.Condition> get() = selectBuilder.whereClause?.conditions ?: listOf()
+    val conditions: List<WhereClauseBuilder.Condition> get() = selectBuilder.whereClause?.conditions ?: listOf()
 
     init {
         selectBuilder.init()
@@ -57,9 +57,9 @@ class KQuerySelect<T : Any>(private val kClass: KClass<T>, init: KQuerySelectBui
 }
 
 class KQuerySelectBuilder<T : Any>(private val kClass: KClass<T>) {
-    private var _fieldProjectionBuilder: KQueryFieldProjectionBuilder? = null
-    private var _whereClauseBuilder: KQueryWhereClauseBuilder<T>? = null
-    private var _sortClauseBuilder: KQuerySortClauseBuilder<T>? = null
+    private var _fieldProjectionBuilder: FieldProjectionBuilder? = null
+    private var _whereClauseBuilder: WhereClauseBuilder<T>? = null
+    private var _sortClauseBuilder: SortClauseBuilder<T>? = null
     private var _limit: Int = -1
     private var _offset: Int = -1
 
@@ -69,18 +69,18 @@ class KQuerySelectBuilder<T : Any>(private val kClass: KClass<T>) {
     val limit get() = _limit
     val offset get() = _offset
 
-    fun fields(init: KQueryFieldProjectionBuilder.(it: T) -> Unit) {
-        _fieldProjectionBuilder = KQueryFieldProjectionBuilder()
+    fun fields(init: FieldProjectionBuilder.(it: T) -> Unit) {
+        _fieldProjectionBuilder = FieldProjectionBuilder()
         kClass.stubInstanceAction { _fieldProjectionBuilder?.init(it) }
     }
 
-    fun where(init: KQueryWhereClauseBuilder<T>.(it: T) -> Unit) {
-        _whereClauseBuilder = KQueryWhereClauseBuilder(kClass)
+    fun where(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
+        _whereClauseBuilder = WhereClauseBuilder(kClass)
         kClass.stubInstanceAction { _whereClauseBuilder?.init(it) }
     }
 
-    fun sort(init: KQuerySortClauseBuilder<T>.(it: T) -> Unit) {
-        _sortClauseBuilder = KQuerySortClauseBuilder()
+    fun sort(init: SortClauseBuilder<T>.(it: T) -> Unit) {
+        _sortClauseBuilder = SortClauseBuilder()
         kClass.stubInstanceAction { _sortClauseBuilder?.init(it) }
     }
 
