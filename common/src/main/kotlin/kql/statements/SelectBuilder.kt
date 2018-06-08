@@ -1,27 +1,27 @@
 package kql.statements
 
-import kql.clauses.FieldProjectionBuilder
+import kql.clauses.FieldClauseBuilder
 import kql.clauses.SortClauseBuilder
 import kql.clauses.WhereClauseBuilder
 import kql.utils.stubInstanceAction
 import kotlin.reflect.KClass
 
 class SelectBuilder<T : Any>(private val kClass: KClass<T>) {
-    private var _fieldProjectionBuilder: FieldProjectionBuilder? = null
+    private var _fieldClauseBuilder: FieldClauseBuilder? = null
     private var _whereClauseBuilder: WhereClauseBuilder<T>? = null
     private var _sortClauseBuilder: SortClauseBuilder? = null
     private var _limit: Int = -1
     private var _offset: Int = -1
 
-    val fieldClause get() = _fieldProjectionBuilder
+    val fieldClause get() = _fieldClauseBuilder
     val whereClause get() = _whereClauseBuilder
     val sortClause get() = _sortClauseBuilder
     val limit get() = _limit
     val offset get() = _offset
 
-    fun fields(init: FieldProjectionBuilder.(it: T) -> Unit) {
-        _fieldProjectionBuilder = FieldProjectionBuilder()
-        kClass.stubInstanceAction { _fieldProjectionBuilder?.init(it) }
+    fun fields(init: FieldClauseBuilder.(it: T) -> Unit) {
+        _fieldClauseBuilder = FieldClauseBuilder()
+        kClass.stubInstanceAction { _fieldClauseBuilder?.init(it) }
     }
 
     fun where(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
