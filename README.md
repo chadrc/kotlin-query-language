@@ -7,7 +7,7 @@ class Post(val id: Int, val text: String, val published: Date, val topic: String
 
 ### Create
 ```kotlin
-val query = KQueryInsert(Post::class) {
+val query = Insert(Post::class) {
     // At least one required
     +Post("Some content")
     
@@ -18,7 +18,7 @@ val query = KQueryInsert(Post::class) {
 
 ### Read
 ```kotlin
-val query = KQuerySelect(Post::class) {
+val query = Select(Post::class) {
     // Optional Projection
     // If not provided, entire record is returned
     // All chosen field must be all pluses or all minuses
@@ -53,7 +53,7 @@ val query = KQuerySelect(Post::class) {
 
 #### Count
 ```kotlin
-val query = KQueryCount(Post::class) {
+val query = Count(Post::class) {
     where {
         it::text eq "Hello"
     }
@@ -62,7 +62,7 @@ val query = KQueryCount(Post::class) {
 
 ### Update
 ```kotlin
-val query = KQueryUpdate(Post::class) {
+val query = Update(Post::class) {
     // Update all records
     set {
         it::text to "Update text"
@@ -77,7 +77,7 @@ val query = KQueryUpdate(Post::class) {
 
 ### Delete
 ```kotlin
-val query = KQueryDelete(Post::class) {
+val query = Delete(Post::class) {
     // Deletes nothing by default
     
     // Conditional delete
