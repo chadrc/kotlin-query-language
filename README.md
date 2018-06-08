@@ -68,13 +68,9 @@ val query = KQueryUpdate(Post::class) {
         it::text to "Update text"
     }
     
-    // Conditional update
+    // Update only records that pass conditions
     where {
         it::id eq 1
-        
-        set {
-            it::text to "Conditional update"
-        }
     }
 }
 ```
