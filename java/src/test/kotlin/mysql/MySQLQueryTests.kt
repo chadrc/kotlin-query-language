@@ -198,4 +198,33 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post WHERE ((topic='Food') OR (ranking>=100))", query.queryString)
     }
+
+    @Test
+    fun testNestedLogicalOperators() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                any {
+                    all {
+                        it::topic eq "Food"
+                        it::ranking gte 100
+                    }
+
+                    all {
+                        it::authorId eq 10
+                        it::ranking gte 50
+
+                        any {
+                            it::topic eq "Technology"
+                            it::topic eq "Music"
+                        }
+                    }
+                }
+
+                it::text matches "Tutorial"
+                it::sticky eq true
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE (((topic='Food') AND (ranking>=100)) OR ((authorId=10) AND (ranking>=50) AND ((topic='Technology') OR (topic='Music')))) AND (text LIKE 'Tutorial') AND (sticky=TRUE)", query.queryString)
+    }
 }
