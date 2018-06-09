@@ -124,7 +124,7 @@ class MySQLQueryTests {
             }
         }
 
-        assertEquals("SELECT $allPostFields FROM Post WHERE topic IN ('Food','Photography','Music')", query.queryString)
+        assertEquals("SELECT $allPostFields FROM Post WHERE (topic IN ('Food','Photography','Music'))", query.queryString)
     }
 
     @Test
@@ -135,6 +135,6 @@ class MySQLQueryTests {
             }
         }
 
-        assertEquals("SELECT $allPostFields FROM Post WHERE ranking BETWEEN 100 AND 200", query.queryString)
+        assertEquals("SELECT $allPostFields FROM Post WHERE (ranking BETWEEN 100 AND 200)", query.queryString)
     }
 }

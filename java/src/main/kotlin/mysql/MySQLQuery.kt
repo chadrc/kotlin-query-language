@@ -33,13 +33,13 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                             is List<*> -> {
                                 val valueList = value.map { valueToMySQL(it!!) }
                                 val valueStr = valueList.joinToString(",")
-                                conditionList.add("$propStr IN ($valueStr)")
+                                conditionList.add("($propStr IN ($valueStr))")
                             }
 
                             is ClosedRange<*> -> {
                                 val min = value.start
                                 val max = value.endInclusive
-                                conditionList.add("$propStr BETWEEN $min AND $max")
+                                conditionList.add("($propStr BETWEEN $min AND $max)")
                             }
 
                             else -> throw Error("Unsupported type for 'within' operator ${value::class.simpleName}")
