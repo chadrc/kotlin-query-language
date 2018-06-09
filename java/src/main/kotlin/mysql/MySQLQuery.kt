@@ -29,6 +29,7 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                     val propStr = condition.prop?.name
                     val opStr = when (condition.op) {
                         WhereClauseBuilder.Operator.Equals -> "="
+                        WhereClauseBuilder.Operator.NotEquals -> "!="
 
                         else -> throw Error()
                     }

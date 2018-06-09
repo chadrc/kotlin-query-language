@@ -60,4 +60,15 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post WHERE topic='Food' AND sticky=TRUE", query.queryString)
     }
+
+    @Test
+    fun testSelectWithNotEqual() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::topic ne "Food"
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE topic!='Food'", query.queryString)
+    }
 }
