@@ -10,3 +10,6 @@ inline fun <reified T : Any> kqlSelect(noinline selectBuilder: SelectBuilder<T>.
 
 inline fun <reified T : Any> kqlCount(noinline countBuilder: CountBuilder<T>.() -> Unit) =
         Count(T::class, countBuilder)
+
+inline fun <reified T : Any> kqlDelete(noinline deleteBuilder: DeleteBuilder<T>.() -> Unit) =
+        Delete(T::class, deleteBuilder)
