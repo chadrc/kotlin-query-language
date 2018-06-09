@@ -29,4 +29,13 @@ class UpdateTests {
 
         assertEquals(1, query.conditions!!.size)
     }
+
+    @Test
+    fun testUpdateChanges() {
+        val query = kqlUpdate<Post> {
+            it::text toValue "Updated Text"
+        }
+
+        assertEquals(1, query.changes.size)
+    }
 }

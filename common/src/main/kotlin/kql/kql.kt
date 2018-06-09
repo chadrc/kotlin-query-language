@@ -11,7 +11,7 @@ inline fun <reified T : Any> kqlSelect(noinline selectBuilder: SelectBuilder<T>.
 inline fun <reified T : Any> kqlCount(noinline countBuilder: CountBuilder<T>.() -> Unit) =
         Count(T::class, countBuilder)
 
-inline fun <reified T : Any> kqlUpdate(noinline updateBuilder: UpdateBuilder<T>.() -> Unit) =
+inline fun <reified T : Any> kqlUpdate(noinline updateBuilder: UpdateBuilder<T>.(it: T) -> Unit) =
         Update(T::class, updateBuilder)
 
 inline fun <reified T : Any> kqlDelete(noinline deleteBuilder: DeleteBuilder<T>.() -> Unit) =

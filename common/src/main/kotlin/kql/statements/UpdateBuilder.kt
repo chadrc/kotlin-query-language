@@ -1,23 +1,26 @@
 package kql.statements
 
-import kql.clauses.MutationClauseBuilder
 import kql.clauses.WhereClauseBuilder
 import kql.utils.stubInstanceAction
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
+
+class Assignment<T>(val prop: KProperty<T>, val value: T)
 
 class UpdateBuilder<T : Any>(private val kClass: KClass<T>) {
-    private var mutationClauseBuilder: MutationClauseBuilder<T>? = null
-    private var whereClauseBuilder: WhereClauseBuilder<T>? = null
+    private var _whereClauseBuilder: WhereClauseBuilder<T>? = null
 
-    val conditions get() = whereClauseBuilder?.conditions
+    private val _changes = ArrayList<Assignment<*>>()
 
-    fun set(init: MutationClauseBuilder<T>.(it: T) -> Unit) {
-        mutationClauseBuilder = MutationClauseBuilder()
-        kClass.stubInstanceAction { mutationClauseBuilder?.init(it) }
-    }
+    val conditions get() = _whereClauseBuilder?.conditions
+    val changes get() = _changes
 
     fun where(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
-        whereClauseBuilder = WhereClauseBuilder(kClass)
-        kClass.stubInstanceAction { whereClauseBuilder?.init(it) }
+        _whereClauseBuilder = WhereClauseBuilder(kClass)
+        kClass.stubInstanceAction { _whereClauseBuilder?.init(it) }
+    }
+
+    infix fun <T : Any> KProperty<T>.toValue(b: T) {
+        _changes.add(Assignment(this, b))
     }
 }

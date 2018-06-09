@@ -71,10 +71,10 @@ val query = Count(Post::class) {
 val query = Update(Post::class) {
 
     // Set field value
-    it::text to "Update text"
+    it::text toValue "Update text"
 
     // Special value, to be interpreted by DB
-    it::publish to kqlCurrentDate
+    it::publish toValue kqlCurrentDate
 
     // Unset value
     -it::topic
