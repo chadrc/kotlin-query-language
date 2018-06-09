@@ -81,10 +81,10 @@ val query = Update(Post::class) {
     unset(it::topic)
 
     // 2 ways to do relative math operations values
-    it::views inc 2
+    it::views add 2
     it::views += 2
 
-    it::views dec 2
+    it::views sub 2
     it::views -= 2
 
     it::ranking mul 2

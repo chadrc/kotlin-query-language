@@ -66,7 +66,7 @@ class UpdateTests {
     @Test
     fun testIncKeyword() {
         val query = kqlUpdate<Post> {
-            it::ranking inc 2
+            it::ranking add 2
         }
 
         assertEquals(1, query.changes.size)
@@ -92,7 +92,7 @@ class UpdateTests {
     @Test
     fun testDecKeyword() {
         val query = kqlUpdate<Post> {
-            it::ranking dec 2
+            it::ranking sub 2
         }
 
         assertEquals(1, query.changes.size)

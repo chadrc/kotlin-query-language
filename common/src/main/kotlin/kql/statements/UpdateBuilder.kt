@@ -46,20 +46,20 @@ class UpdateBuilder<T : Any>(private val kClass: KClass<T>) {
         _changes.add(Unset(prop))
     }
 
-    infix fun <T : Number> KProperty<T>.inc(n: T) {
+    infix fun <T : Number> KProperty<T>.add(n: T) {
         _changes.add(MathOperation(this, Operation.Increment, n))
     }
 
     operator fun <T : Number> KProperty<T>.plusAssign(n: T) {
-        this inc n
+        this add n
     }
 
-    infix fun <T : Number> KProperty<T>.dec(n: T) {
+    infix fun <T : Number> KProperty<T>.sub(n: T) {
         _changes.add(MathOperation(this, Operation.Decrement, n))
     }
 
     operator fun <T : Number> KProperty<T>.minusAssign(n: T) {
-        this dec n
+        this sub n
     }
 
     infix fun <T : Number> KProperty<T>.mul(n: T) {
