@@ -37,7 +37,7 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
 
     private fun makeConditionString(condition: WhereClauseBuilder.Condition): String {
         val propStr = condition.prop?.name
-        if (condition.op == WhereClauseBuilder.Operator.Within
+        val conditionStr = if (condition.op == WhereClauseBuilder.Operator.Within
                 || condition.op == WhereClauseBuilder.Operator.NotWithin) {
             val value = condition.value
             var conditionStr = when (value) {
@@ -61,15 +61,14 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                 conditionStr = "NOT $conditionStr"
             }
 
-            // Wrap in parenthesis to isolate from other statements
-            return "($conditionStr)"
+            conditionStr
         } else if (condition.op == WhereClauseBuilder.Operator.All
                 || condition.op == WhereClauseBuilder.Operator.Any) {
             val subConditions = condition.value as List<WhereClauseBuilder.Condition>
             val conditionStrs = subConditions.map { makeConditionString(it) }
             val sep = if (condition.op == WhereClauseBuilder.Operator.All) " AND " else " OR "
-            val combined = conditionStrs.joinToString(sep)
-            return "($combined)"
+
+            conditionStrs.joinToString(sep)
         } else {
             val opStr = when (condition.op) {
                 WhereClauseBuilder.Operator.Equals -> "="
@@ -86,8 +85,12 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
             // Wrap strings in single quotes for SQL
             // otherwise use raw value
             val valueStr = valueToMySQL(condition.value)
-            return "($propStr$opStr$valueStr)"
+
+            "$propStr$opStr$valueStr"
         }
+
+        // Wrap in parenthesis to isolate from other statements
+        return "($conditionStr)"
     }
 
     private fun valueToMySQL(value: Any): String {
