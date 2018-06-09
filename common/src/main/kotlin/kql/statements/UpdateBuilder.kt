@@ -12,7 +12,11 @@ class Assignment<T>(val prop: KProperty<T>, val value: T) : Change
 class Unset<T>(val prop: KProperty<T>) : Change
 
 enum class Operation {
-    Increment
+    Increment,
+    Decrement,
+    Multiply,
+    Divide,
+    Remainder
 }
 
 class MathOperation<T : Number>(val prop: KProperty<T>, val op: Operation, val value: T) : Change
@@ -48,5 +52,37 @@ class UpdateBuilder<T : Any>(private val kClass: KClass<T>) {
 
     operator fun <T : Number> KProperty<T>.plusAssign(n: T) {
         this inc n
+    }
+
+    infix fun <T : Number> KProperty<T>.dec(n: T) {
+        _changes.add(MathOperation(this, Operation.Decrement, n))
+    }
+
+    operator fun <T : Number> KProperty<T>.minusAssign(n: T) {
+        this dec n
+    }
+
+    infix fun <T : Number> KProperty<T>.mul(n: T) {
+        _changes.add(MathOperation(this, Operation.Multiply, n))
+    }
+
+    operator fun <T : Number> KProperty<T>.timesAssign(n: T) {
+        this mul n
+    }
+
+    infix fun <T : Number> KProperty<T>.div(n: T) {
+        _changes.add(MathOperation(this, Operation.Divide, n))
+    }
+
+    operator fun <T : Number> KProperty<T>.divAssign(n: T) {
+        this div n
+    }
+
+    infix fun <T : Number> KProperty<T>.rem(n: T) {
+        _changes.add(MathOperation(this, Operation.Remainder, n))
+    }
+
+    operator fun <T : Number> KProperty<T>.remAssign(n: T) {
+        this rem n
     }
 }

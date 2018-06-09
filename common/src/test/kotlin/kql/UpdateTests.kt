@@ -88,4 +88,108 @@ class UpdateTests {
         assertTrue(change is MathOperation<*>)
         assertTrue((change as MathOperation<*>).op == Operation.Increment)
     }
+
+    @Test
+    fun testDecKeyword() {
+        val query = kqlUpdate<Post> {
+            it::ranking dec 2
+        }
+
+        assertEquals(1, query.changes.size)
+
+        val change = query.changes[0]
+        assertTrue(change is MathOperation<*>)
+        assertTrue((change as MathOperation<*>).op == Operation.Decrement)
+    }
+
+    @Test
+    fun testDecAssignment() {
+        val query = kqlUpdate<Post> {
+            it::ranking -= 2
+        }
+
+        assertEquals(1, query.changes.size)
+
+        val change = query.changes[0]
+        assertTrue(change is MathOperation<*>)
+        assertTrue((change as MathOperation<*>).op == Operation.Decrement)
+    }
+
+    @Test
+    fun testMulKeyword() {
+        val query = kqlUpdate<Post> {
+            it::ranking mul 2
+        }
+
+        assertEquals(1, query.changes.size)
+
+        val change = query.changes[0]
+        assertTrue(change is MathOperation<*>)
+        assertTrue((change as MathOperation<*>).op == Operation.Multiply)
+    }
+
+    @Test
+    fun testMulAssignment() {
+        val query = kqlUpdate<Post> {
+            it::ranking *= 2
+        }
+
+        assertEquals(1, query.changes.size)
+
+        val change = query.changes[0]
+        assertTrue(change is MathOperation<*>)
+        assertTrue((change as MathOperation<*>).op == Operation.Multiply)
+    }
+
+    @Test
+    fun testDivKeyword() {
+        val query = kqlUpdate<Post> {
+            it::ranking div 2
+        }
+
+        assertEquals(1, query.changes.size)
+
+        val change = query.changes[0]
+        assertTrue(change is MathOperation<*>)
+        assertTrue((change as MathOperation<*>).op == Operation.Divide)
+    }
+
+    @Test
+    fun testDivAssignment() {
+        val query = kqlUpdate<Post> {
+            it::ranking /= 2
+        }
+
+        assertEquals(1, query.changes.size)
+
+        val change = query.changes[0]
+        assertTrue(change is MathOperation<*>)
+        assertTrue((change as MathOperation<*>).op == Operation.Divide)
+    }
+
+    @Test
+    fun testRemKeyword() {
+        val query = kqlUpdate<Post> {
+            it::ranking rem 2
+        }
+
+        assertEquals(1, query.changes.size)
+
+        val change = query.changes[0]
+        assertTrue(change is MathOperation<*>)
+        assertTrue((change as MathOperation<*>).op == Operation.Remainder)
+    }
+
+    @Test
+    fun testRemAssignment() {
+        val query = kqlUpdate<Post> {
+            it::ranking %= 2
+        }
+
+        assertEquals(1, query.changes.size)
+
+        val change = query.changes[0]
+        assertTrue(change is MathOperation<*>)
+        assertTrue((change as MathOperation<*>).op == Operation.Remainder)
+    }
 }
