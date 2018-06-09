@@ -48,4 +48,16 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post WHERE id=1", query.queryString)
     }
+
+    @Test
+    fun testSelectWithMultipleConditions() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::topic eq "Food"
+                it::sticky eq true
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE topic='Food' AND sticky=TRUE", query.queryString)
+    }
 }

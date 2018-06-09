@@ -32,7 +32,17 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
 
                         else -> throw Error()
                     }
-                    val valueStr = condition.value.toString()
+
+                    // Wrap strings in single quotes for SQL
+                    // otherwise use raw value
+                    val valueStr = when (condition.value) {
+                        is String -> "'${condition.value}'"
+                        is Number -> condition.value.toString()
+                        is Boolean -> if (condition.value == true) "TRUE" else "FALSE"
+
+                        else -> condition.value.toString()
+                    }
+
                     conditionList.add("$propStr$opStr$valueStr")
                 }
 
