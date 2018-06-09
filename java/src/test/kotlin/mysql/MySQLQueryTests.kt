@@ -37,4 +37,15 @@ class MySQLQueryTests {
 
         assertEquals("SELECT authorId,id,published,sticky,text,topic FROM Post", query.queryString)
     }
+
+    @Test
+    fun testSelectWithWhereEq() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::id eq 1
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE id=1", query.queryString)
+    }
 }
