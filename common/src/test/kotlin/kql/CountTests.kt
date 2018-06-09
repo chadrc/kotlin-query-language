@@ -17,4 +17,15 @@ class CountTests {
 
         assertEquals(1, query.conditions!!.size)
     }
+
+    @Test
+    fun testCountHelper() {
+        val query = kqlCount<Post> {
+            where {
+                it::topic eq "Food"
+            }
+        }
+
+        assertEquals(1, query.conditions!!.size)
+    }
 }
