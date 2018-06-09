@@ -71,4 +71,15 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post WHERE topic!='Food'", query.queryString)
     }
+
+    @Test
+    fun testSelectWithGreaterThan() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::ranking gt 100
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE ranking>100", query.queryString)
+    }
 }

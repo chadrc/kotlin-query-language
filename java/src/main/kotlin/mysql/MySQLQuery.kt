@@ -30,8 +30,9 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                     val opStr = when (condition.op) {
                         WhereClauseBuilder.Operator.Equals -> "="
                         WhereClauseBuilder.Operator.NotEquals -> "!="
+                        WhereClauseBuilder.Operator.GreaterThan -> ">"
 
-                        else -> throw Error()
+                        else -> throw Error("Unknown operator ${condition.op}")
                     }
 
                     // Wrap strings in single quotes for SQL

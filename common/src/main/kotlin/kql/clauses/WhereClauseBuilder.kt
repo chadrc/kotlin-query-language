@@ -34,7 +34,7 @@ class WhereClauseBuilder<T : Any>(private val kClass: KClass<T>) {
     }
 
     infix fun <T : Comparable<T>> KProperty<T>.gt(v: T) {
-        _conditions.add(Condition(this, Operator.LessThan, v))
+        _conditions.add(Condition(this, Operator.GreaterThan, v))
     }
 
     infix fun <T : Comparable<T>> KProperty<T>.gte(v: T) {
