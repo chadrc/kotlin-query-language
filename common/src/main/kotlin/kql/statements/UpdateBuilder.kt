@@ -29,6 +29,10 @@ class UpdateBuilder<T : Any>(private val kClass: KClass<T>) {
     }
 
     operator fun <T> KProperty<T>.unaryMinus() {
-        _changes.add(Unset(this))
+        unset(this)
+    }
+
+    fun <T> unset(prop: KProperty<T>) {
+        _changes.add(Unset(prop))
     }
 }

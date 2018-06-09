@@ -48,7 +48,16 @@ class UpdateTests {
         }
 
         assertEquals(1, query.changes.size)
+        assertTrue(query.changes[0] is Unset<*>)
+    }
 
+    @Test
+    fun testUnsetFunctionSyntax() {
+        val query = kqlUpdate<Post> {
+            unset(it::author)
+        }
+
+        assertEquals(1, query.changes.size)
         assertTrue(query.changes[0] is Unset<*>)
     }
 }
