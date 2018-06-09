@@ -10,6 +10,18 @@ class MySQLQueryTests {
     fun testDefaultSelectStatement() {
         val query = kqlMySQLSelect<Post> {}
 
-        assertEquals("SELECT * FROM Post", query.queryString)
+        assertEquals("SELECT author,authorId,id,published,ranking,sticky,text,topic FROM Post", query.queryString)
+    }
+
+    @Test
+    fun testSelectWithPlusField() {
+        val query = kqlMySQLSelect<Post> {
+            fields {
+                +it::id
+                +it::authorId
+            }
+        }
+
+        assertEquals("SELECT authorId,id FROM Post", query.queryString)
     }
 }
