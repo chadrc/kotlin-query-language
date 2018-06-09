@@ -79,6 +79,7 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                 WhereClauseBuilder.Operator.LessThanOrEquals -> "<="
                 WhereClauseBuilder.Operator.Matches -> " LIKE "
 
+            // Should be able to reach this since other operators are handled above
                 else -> throw Error("Unknown operator ${condition.op}")
             }
 
