@@ -3,6 +3,7 @@ package kql
 import Post
 import kql.statements.Update
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 class UpdateTests {
@@ -16,5 +17,16 @@ class UpdateTests {
     fun testUpdateHelper() {
         val query = kqlUpdate<Post> {}
         assertNotNull(query)
+    }
+
+    @Test
+    fun testUpdateWhereClause() {
+        val query = kqlUpdate<Post> {
+            where {
+                it::id eq 1
+            }
+        }
+
+        assertEquals(1, query.conditions!!.size)
     }
 }
