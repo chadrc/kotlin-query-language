@@ -64,9 +64,22 @@ class UpdateTests {
     }
 
     @Test
-    fun testIncUnary() {
+    fun testIncKeyword() {
         val query = kqlUpdate<Post> {
             it::ranking inc 2
+        }
+
+        assertEquals(1, query.changes.size)
+
+        val change = query.changes[0]
+        assertTrue(change is MathOperation<*>)
+        assertTrue((change as MathOperation<*>).op == Operation.Increment)
+    }
+
+    @Test
+    fun testIncAssignment() {
+        val query = kqlUpdate<Post> {
+            it::ranking += 2
         }
 
         assertEquals(1, query.changes.size)

@@ -45,4 +45,8 @@ class UpdateBuilder<T : Any>(private val kClass: KClass<T>) {
     infix fun <T : Number> KProperty<T>.inc(n: T) {
         _changes.add(MathOperation(this, Operation.Increment, n))
     }
+
+    operator fun <T : Number> KProperty<T>.plusAssign(n: T) {
+        this inc n
+    }
 }
