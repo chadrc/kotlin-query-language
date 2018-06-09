@@ -5,12 +5,13 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class MySQLQueryTests {
+    private val allPostFields = "author,authorId,id,published,ranking,sticky,text,topic"
 
     @Test
     fun testDefaultSelectStatement() {
         val query = kqlMySQLSelect<Post> {}
 
-        assertEquals("SELECT author,authorId,id,published,ranking,sticky,text,topic FROM Post", query.queryString)
+        assertEquals("SELECT $allPostFields FROM Post", query.queryString)
     }
 
     @Test
@@ -23,5 +24,17 @@ class MySQLQueryTests {
         }
 
         assertEquals("SELECT authorId,id FROM Post", query.queryString)
+    }
+
+    @Test
+    fun testSelectWithMinusField() {
+        val query = kqlMySQLSelect<Post> {
+            fields {
+                -it::author
+                -it::ranking
+            }
+        }
+
+        assertEquals("SELECT authorId,id,published,sticky,text,topic FROM Post", query.queryString)
     }
 }
