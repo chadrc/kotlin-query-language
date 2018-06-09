@@ -82,4 +82,37 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post WHERE ranking>100", query.queryString)
     }
+
+    @Test
+    fun testSelectWithGreaterThanEqual() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::ranking gte 100
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE ranking>=100", query.queryString)
+    }
+
+    @Test
+    fun testSelectWithLessThan() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::ranking lt 100
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE ranking<100", query.queryString)
+    }
+
+    @Test
+    fun testSelectWithLessThanEqual() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::ranking lte 100
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE ranking<=100", query.queryString)
+    }
 }
