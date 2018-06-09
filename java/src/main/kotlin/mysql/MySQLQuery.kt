@@ -26,51 +26,7 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
             if (select.conditions.isNotEmpty()) {
                 val conditionList = ArrayList<String>()
                 for (condition in select.conditions) {
-                    val propStr = condition.prop?.name
-                    if (condition.op == WhereClauseBuilder.Operator.Within
-                            || condition.op == WhereClauseBuilder.Operator.NotWithin) {
-                        val value = condition.value
-                        var conditionStr = when (value) {
-                            is List<*> -> {
-                                val valueList = value.map { valueToMySQL(it!!) }
-                                val valueStr = valueList.joinToString(",")
-                                "$propStr IN ($valueStr)"
-                            }
-
-                            is ClosedRange<*> -> {
-                                val min = valueToMySQL(value.start)
-                                val max = valueToMySQL(value.endInclusive)
-                                "$propStr BETWEEN $min AND $max"
-                            }
-
-                            else -> throw Error("Unsupported type for 'within' operator ${value::class.simpleName}")
-                        }
-
-                        // negate condition if 'Not'
-                        if (condition.op == WhereClauseBuilder.Operator.NotWithin) {
-                            conditionStr = "NOT $conditionStr"
-                        }
-
-                        // Wrap in parenthesis to isolate from other statements
-                        conditionList.add("($conditionStr)")
-                    } else {
-                        val opStr = when (condition.op) {
-                            WhereClauseBuilder.Operator.Equals -> "="
-                            WhereClauseBuilder.Operator.NotEquals -> "!="
-                            WhereClauseBuilder.Operator.GreaterThan -> ">"
-                            WhereClauseBuilder.Operator.GreaterThanOrEquals -> ">="
-                            WhereClauseBuilder.Operator.LessThan -> "<"
-                            WhereClauseBuilder.Operator.LessThanOrEquals -> "<="
-                            WhereClauseBuilder.Operator.Matches -> " LIKE "
-
-                            else -> throw Error("Unknown operator ${condition.op}")
-                        }
-
-                        // Wrap strings in single quotes for SQL
-                        // otherwise use raw value
-                        val valueStr = valueToMySQL(condition.value)
-                        conditionList.add("($propStr$opStr$valueStr)")
-                    }
+                    conditionList.add(makeConditionString(condition))
                 }
 
                 val conditionsStr = conditionList.joinToString(" AND ")
@@ -78,6 +34,59 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
             }
             return "SELECT $fieldSelection FROM ${kClass.simpleName}$whereClause"
         }
+
+    private fun makeConditionString(condition: WhereClauseBuilder.Condition): String {
+        val propStr = condition.prop?.name
+        if (condition.op == WhereClauseBuilder.Operator.Within
+                || condition.op == WhereClauseBuilder.Operator.NotWithin) {
+            val value = condition.value
+            var conditionStr = when (value) {
+                is List<*> -> {
+                    val valueList = value.map { valueToMySQL(it!!) }
+                    val valueStr = valueList.joinToString(",")
+                    "$propStr IN ($valueStr)"
+                }
+
+                is ClosedRange<*> -> {
+                    val min = valueToMySQL(value.start)
+                    val max = valueToMySQL(value.endInclusive)
+                    "$propStr BETWEEN $min AND $max"
+                }
+
+                else -> throw Error("Unsupported type for 'within' operator ${value::class.simpleName}")
+            }
+
+            // negate condition if 'Not'
+            if (condition.op == WhereClauseBuilder.Operator.NotWithin) {
+                conditionStr = "NOT $conditionStr"
+            }
+
+            // Wrap in parenthesis to isolate from other statements
+            return "($conditionStr)"
+        } else if (condition.op == WhereClauseBuilder.Operator.All) {
+            val subConditions = condition.value as List<WhereClauseBuilder.Condition>
+            val conditionStrs = subConditions.map { makeConditionString(it) }
+            val andStr = conditionStrs.joinToString(" AND ")
+            return "($andStr)"
+        } else {
+            val opStr = when (condition.op) {
+                WhereClauseBuilder.Operator.Equals -> "="
+                WhereClauseBuilder.Operator.NotEquals -> "!="
+                WhereClauseBuilder.Operator.GreaterThan -> ">"
+                WhereClauseBuilder.Operator.GreaterThanOrEquals -> ">="
+                WhereClauseBuilder.Operator.LessThan -> "<"
+                WhereClauseBuilder.Operator.LessThanOrEquals -> "<="
+                WhereClauseBuilder.Operator.Matches -> " LIKE "
+
+                else -> throw Error("Unknown operator ${condition.op}")
+            }
+
+            // Wrap strings in single quotes for SQL
+            // otherwise use raw value
+            val valueStr = valueToMySQL(condition.value)
+            return "($propStr$opStr$valueStr)"
+        }
+    }
 
     private fun valueToMySQL(value: Any): String {
         // Wrap strings in single quotes for SQL
