@@ -115,4 +115,15 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post WHERE ranking<=100", query.queryString)
     }
+
+    @Test
+    fun testSelectWithWithin() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::topic within listOf("Food", "Photography", "Music")
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE topic IN ('Food','Photography','Music')", query.queryString)
+    }
 }

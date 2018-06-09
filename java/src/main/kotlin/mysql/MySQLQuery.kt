@@ -27,28 +27,33 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                 val conditionList = ArrayList<String>()
                 for (condition in select.conditions) {
                     val propStr = condition.prop?.name
-                    val opStr = when (condition.op) {
-                        WhereClauseBuilder.Operator.Equals -> "="
-                        WhereClauseBuilder.Operator.NotEquals -> "!="
-                        WhereClauseBuilder.Operator.GreaterThan -> ">"
-                        WhereClauseBuilder.Operator.GreaterThanOrEquals -> ">="
-                        WhereClauseBuilder.Operator.LessThan -> "<"
-                        WhereClauseBuilder.Operator.LessThanOrEquals -> "<="
+                    if (condition.op == WhereClauseBuilder.Operator.Within) {
+                        when (condition.value) {
+                            is List<*> -> {
+                                val valueList = (condition.value as List<*>).map { valueToMySQL(it!!) }
+                                val valueStr = valueList.joinToString(",")
+                                conditionList.add("$propStr IN ($valueStr)")
+                            }
 
-                        else -> throw Error("Unknown operator ${condition.op}")
+                            else -> throw Error("Unsupported type for 'within' operator ${condition.value::class.simpleName}")
+                        }
+                    } else {
+                        val opStr = when (condition.op) {
+                            WhereClauseBuilder.Operator.Equals -> "="
+                            WhereClauseBuilder.Operator.NotEquals -> "!="
+                            WhereClauseBuilder.Operator.GreaterThan -> ">"
+                            WhereClauseBuilder.Operator.GreaterThanOrEquals -> ">="
+                            WhereClauseBuilder.Operator.LessThan -> "<"
+                            WhereClauseBuilder.Operator.LessThanOrEquals -> "<="
+
+                            else -> throw Error("Unknown operator ${condition.op}")
+                        }
+
+                        // Wrap strings in single quotes for SQL
+                        // otherwise use raw value
+                        val valueStr = valueToMySQL(condition.value)
+                        conditionList.add("$propStr$opStr$valueStr")
                     }
-
-                    // Wrap strings in single quotes for SQL
-                    // otherwise use raw value
-                    val valueStr = when (condition.value) {
-                        is String -> "'${condition.value}'"
-                        is Number -> condition.value.toString()
-                        is Boolean -> if (condition.value == true) "TRUE" else "FALSE"
-
-                        else -> condition.value.toString()
-                    }
-
-                    conditionList.add("$propStr$opStr$valueStr")
                 }
 
                 val conditionsStr = conditionList.joinToString(" AND ")
@@ -56,6 +61,18 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
             }
             return "SELECT $fieldSelection FROM ${kClass.simpleName}$whereClause"
         }
+
+    private fun valueToMySQL(value: Any): String {
+        // Wrap strings in single quotes for SQL
+        // otherwise use raw value
+        return when (value) {
+            is String -> "'$value'"
+            is Number -> value.toString()
+            is Boolean -> if (value == true) "TRUE" else "FALSE"
+
+            else -> value.toString()
+        }
+    }
 }
 
 inline fun <reified T : Any> kqlMySQLSelect(noinline init: SelectBuilder<T>.() -> Unit) = MySQLSelect(T::class, init)
