@@ -37,8 +37,8 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                             }
 
                             is ClosedRange<*> -> {
-                                val min = value.start
-                                val max = value.endInclusive
+                                val min = valueToMySQL(value.start)
+                                val max = valueToMySQL(value.endInclusive)
                                 conditionList.add("($propStr BETWEEN $min AND $max)")
                             }
 
