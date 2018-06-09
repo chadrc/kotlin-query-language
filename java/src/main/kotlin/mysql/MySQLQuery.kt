@@ -27,23 +27,32 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                 val conditionList = ArrayList<String>()
                 for (condition in select.conditions) {
                     val propStr = condition.prop?.name
-                    if (condition.op == WhereClauseBuilder.Operator.Within) {
+                    if (condition.op == WhereClauseBuilder.Operator.Within
+                            || condition.op == WhereClauseBuilder.Operator.NotWithin) {
                         val value = condition.value
-                        when (value) {
+                        var conditionStr = when (value) {
                             is List<*> -> {
                                 val valueList = value.map { valueToMySQL(it!!) }
                                 val valueStr = valueList.joinToString(",")
-                                conditionList.add("($propStr IN ($valueStr))")
+                                "$propStr IN ($valueStr)"
                             }
 
                             is ClosedRange<*> -> {
                                 val min = valueToMySQL(value.start)
                                 val max = valueToMySQL(value.endInclusive)
-                                conditionList.add("($propStr BETWEEN $min AND $max)")
+                                "$propStr BETWEEN $min AND $max"
                             }
 
                             else -> throw Error("Unsupported type for 'within' operator ${value::class.simpleName}")
                         }
+
+                        // negate condition if 'Not'
+                        if (condition.op == WhereClauseBuilder.Operator.NotWithin) {
+                            conditionStr = "NOT $conditionStr"
+                        }
+
+                        // Wrap in parenthesis to isolate from other statements
+                        conditionList.add("($conditionStr)")
                     } else {
                         val opStr = when (condition.op) {
                             WhereClauseBuilder.Operator.Equals -> "="

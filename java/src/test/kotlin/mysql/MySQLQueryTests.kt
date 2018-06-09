@@ -128,6 +128,17 @@ class MySQLQueryTests {
     }
 
     @Test
+    fun testSelectWithNotWithinList() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::topic notWithin listOf("Food", "Photography", "Music")
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE (NOT topic IN ('Food','Photography','Music'))", query.queryString)
+    }
+
+    @Test
     fun testSelectWithWithinRange() {
         val query = kqlMySQLSelect<Post> {
             where {
@@ -136,5 +147,16 @@ class MySQLQueryTests {
         }
 
         assertEquals("SELECT $allPostFields FROM Post WHERE (ranking BETWEEN 100 AND 200)", query.queryString)
+    }
+
+    @Test
+    fun testSelectWithNotWithinRange() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::ranking notWithin 100..200
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE (NOT ranking BETWEEN 100 AND 200)", query.queryString)
     }
 }
