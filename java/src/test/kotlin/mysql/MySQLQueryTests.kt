@@ -184,4 +184,18 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post WHERE ((topic='Food') AND (ranking>=100))", query.queryString)
     }
+
+    @Test
+    fun testAny() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                any {
+                    it::topic eq "Food"
+                    it::ranking gte 100
+                }
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE ((topic='Food') OR (ranking>=100))", query.queryString)
+    }
 }

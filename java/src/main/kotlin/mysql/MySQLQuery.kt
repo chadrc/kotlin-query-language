@@ -63,11 +63,13 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
 
             // Wrap in parenthesis to isolate from other statements
             return "($conditionStr)"
-        } else if (condition.op == WhereClauseBuilder.Operator.All) {
+        } else if (condition.op == WhereClauseBuilder.Operator.All
+                || condition.op == WhereClauseBuilder.Operator.Any) {
             val subConditions = condition.value as List<WhereClauseBuilder.Condition>
             val conditionStrs = subConditions.map { makeConditionString(it) }
-            val andStr = conditionStrs.joinToString(" AND ")
-            return "($andStr)"
+            val sep = if (condition.op == WhereClauseBuilder.Operator.All) " AND " else " OR "
+            val combined = conditionStrs.joinToString(sep)
+            return "($combined)"
         } else {
             val opStr = when (condition.op) {
                 WhereClauseBuilder.Operator.Equals -> "="
