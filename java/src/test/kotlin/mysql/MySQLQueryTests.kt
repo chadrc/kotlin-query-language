@@ -46,7 +46,7 @@ class MySQLQueryTests {
             }
         }
 
-        assertEquals("SELECT $allPostFields FROM Post WHERE id=1", query.queryString)
+        assertEquals("SELECT $allPostFields FROM Post WHERE (id=1)", query.queryString)
     }
 
     @Test
@@ -58,7 +58,7 @@ class MySQLQueryTests {
             }
         }
 
-        assertEquals("SELECT $allPostFields FROM Post WHERE topic='Food' AND sticky=TRUE", query.queryString)
+        assertEquals("SELECT $allPostFields FROM Post WHERE (topic='Food') AND (sticky=TRUE)", query.queryString)
     }
 
     @Test
@@ -69,7 +69,7 @@ class MySQLQueryTests {
             }
         }
 
-        assertEquals("SELECT $allPostFields FROM Post WHERE topic!='Food'", query.queryString)
+        assertEquals("SELECT $allPostFields FROM Post WHERE (topic!='Food')", query.queryString)
     }
 
     @Test
@@ -80,7 +80,7 @@ class MySQLQueryTests {
             }
         }
 
-        assertEquals("SELECT $allPostFields FROM Post WHERE ranking>100", query.queryString)
+        assertEquals("SELECT $allPostFields FROM Post WHERE (ranking>100)", query.queryString)
     }
 
     @Test
@@ -91,7 +91,7 @@ class MySQLQueryTests {
             }
         }
 
-        assertEquals("SELECT $allPostFields FROM Post WHERE ranking>=100", query.queryString)
+        assertEquals("SELECT $allPostFields FROM Post WHERE (ranking>=100)", query.queryString)
     }
 
     @Test
@@ -102,7 +102,7 @@ class MySQLQueryTests {
             }
         }
 
-        assertEquals("SELECT $allPostFields FROM Post WHERE ranking<100", query.queryString)
+        assertEquals("SELECT $allPostFields FROM Post WHERE (ranking<100)", query.queryString)
     }
 
     @Test
@@ -113,7 +113,7 @@ class MySQLQueryTests {
             }
         }
 
-        assertEquals("SELECT $allPostFields FROM Post WHERE ranking<=100", query.queryString)
+        assertEquals("SELECT $allPostFields FROM Post WHERE (ranking<=100)", query.queryString)
     }
 
     @Test

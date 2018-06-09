@@ -68,7 +68,7 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                         // Wrap strings in single quotes for SQL
                         // otherwise use raw value
                         val valueStr = valueToMySQL(condition.value)
-                        conditionList.add("$propStr$opStr$valueStr")
+                        conditionList.add("($propStr$opStr$valueStr)")
                     }
                 }
 
