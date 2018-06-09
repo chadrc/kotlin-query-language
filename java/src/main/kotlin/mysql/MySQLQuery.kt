@@ -28,14 +28,21 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                 for (condition in select.conditions) {
                     val propStr = condition.prop?.name
                     if (condition.op == WhereClauseBuilder.Operator.Within) {
-                        when (condition.value) {
+                        val value = condition.value
+                        when (value) {
                             is List<*> -> {
-                                val valueList = (condition.value as List<*>).map { valueToMySQL(it!!) }
+                                val valueList = value.map { valueToMySQL(it!!) }
                                 val valueStr = valueList.joinToString(",")
                                 conditionList.add("$propStr IN ($valueStr)")
                             }
 
-                            else -> throw Error("Unsupported type for 'within' operator ${condition.value::class.simpleName}")
+                            is ClosedRange<*> -> {
+                                val min = value.start
+                                val max = value.endInclusive
+                                conditionList.add("$propStr BETWEEN $min AND $max")
+                            }
+
+                            else -> throw Error("Unsupported type for 'within' operator ${value::class.simpleName}")
                         }
                     } else {
                         val opStr = when (condition.op) {
