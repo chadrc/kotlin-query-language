@@ -1,6 +1,8 @@
 package kql
 
 import Post
+import kql.statements.MathOperation
+import kql.statements.Operation
 import kql.statements.Unset
 import kql.statements.Update
 import kotlin.test.Test
@@ -42,7 +44,7 @@ class UpdateTests {
     }
 
     @Test
-    fun testUnset() {
+    fun testUnsetUnary() {
         val query = kqlUpdate<Post> {
             -it::author
         }
@@ -59,5 +61,18 @@ class UpdateTests {
 
         assertEquals(1, query.changes.size)
         assertTrue(query.changes[0] is Unset<*>)
+    }
+
+    @Test
+    fun testIncUnary() {
+        val query = kqlUpdate<Post> {
+            it::ranking inc 2
+        }
+
+        assertEquals(1, query.changes.size)
+
+        val change = query.changes[0]
+        assertTrue(change is MathOperation<*>)
+        assertTrue((change as MathOperation<*>).op == Operation.Increment)
     }
 }

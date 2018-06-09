@@ -5,5 +5,6 @@ class Post(
         val sticky: Boolean = false,
         val authorId: Int = -1,
         val topic: String = "",
-        val published: Long = 0
+        val published: Long = 0,
+        val ranking: Int = Int.MAX_VALUE
 )

@@ -43,7 +43,7 @@ class SelectTests {
             }
         }
 
-        assertEquals(6, query.fields.size)
+        assertEquals(7, query.fields.size)
     }
 
     @Test
