@@ -5,12 +5,16 @@ import kql.utils.stubInstanceAction
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-class Assignment<T>(val prop: KProperty<T>, val value: T)
+interface Change
+
+class Assignment<T>(val prop: KProperty<T>, val value: T) : Change
+
+class Unset<T>(val prop: KProperty<T>) : Change
 
 class UpdateBuilder<T : Any>(private val kClass: KClass<T>) {
     private var _whereClauseBuilder: WhereClauseBuilder<T>? = null
 
-    private val _changes = ArrayList<Assignment<*>>()
+    private val _changes = ArrayList<Change>()
 
     val conditions get() = _whereClauseBuilder?.conditions
     val changes get() = _changes
@@ -20,7 +24,11 @@ class UpdateBuilder<T : Any>(private val kClass: KClass<T>) {
         kClass.stubInstanceAction { _whereClauseBuilder?.init(it) }
     }
 
-    infix fun <T : Any> KProperty<T>.toValue(b: T) {
+    infix fun <T> KProperty<T>.toValue(b: T) {
         _changes.add(Assignment(this, b))
+    }
+
+    operator fun <T> KProperty<T>.unaryMinus() {
+        _changes.add(Unset(this))
     }
 }
