@@ -159,4 +159,15 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post WHERE (NOT ranking BETWEEN 100 AND 200)", query.queryString)
     }
+
+    @Test
+    fun testMatches() {
+        val query = kqlMySQLSelect<Post> {
+            where {
+                it::text matches "Tutorial"
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE (text LIKE 'Tutorial')", query.queryString)
+    }
 }
