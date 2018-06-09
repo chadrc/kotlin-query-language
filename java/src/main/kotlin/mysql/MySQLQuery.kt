@@ -64,8 +64,8 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
             conditionStr
         } else if (condition.op == WhereClauseBuilder.Operator.All
                 || condition.op == WhereClauseBuilder.Operator.Any) {
-            val subConditions = condition.value as List<WhereClauseBuilder.Condition>
-            val conditionStrs = subConditions.map { makeConditionString(it) }
+            val subConditions = condition.value as List<*>
+            val conditionStrs = subConditions.map { makeConditionString(it as WhereClauseBuilder.Condition) }
             val sep = if (condition.op == WhereClauseBuilder.Operator.All) " AND " else " OR "
 
             conditionStrs.joinToString(sep)
