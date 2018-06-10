@@ -1,6 +1,7 @@
 package com.chadrc.kql
 
 import com.chadrc.kql.exceptions.LeftPropOperandNotOnQueryClass
+import com.chadrc.kql.exceptions.RightPropOperandNotOnInputClass
 import com.chadrc.kql.statements.Insert
 import kotlin.reflect.KProperty
 import kotlin.test.Test
@@ -71,6 +72,17 @@ class InsertTests {
             kqlInsert<Post, Any> {
                 values {
                     Author::firstName eq PostTextInput::text
+                }
+            }
+        }
+    }
+
+    @Test
+    fun errorWhenUsingPropNotOnInputClass() {
+        assertFailsWith<RightPropOperandNotOnInputClass> {
+            kqlInsert<Post, PostTextInput> {
+                values {
+                    Post::text eq Author::firstName
                 }
             }
         }

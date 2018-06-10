@@ -1,6 +1,7 @@
 package com.chadrc.kql.statements
 
 import com.chadrc.kql.exceptions.LeftPropOperandNotOnQueryClass
+import com.chadrc.kql.exceptions.RightPropOperandNotOnInputClass
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -18,11 +19,16 @@ class ValuesBuilder(private val kClass: KClass<*>, private val inputClass: KClas
 
     infix fun <T> KProperty<T>.eq(prop: KProperty<T>) {
         assertOnClass(this)
+        assertOnInputClass(prop)
         _valuePairs.add(ValuePair(this, prop))
     }
 
     private fun assertOnClass(prop: KProperty<*>) {
         if (!kClass.members.contains(prop)) throw LeftPropOperandNotOnQueryClass(prop, kClass)
+    }
+
+    private fun assertOnInputClass(prop: KProperty<*>) {
+        if (!inputClass.members.contains(prop)) throw RightPropOperandNotOnInputClass(prop, inputClass)
     }
 }
 
