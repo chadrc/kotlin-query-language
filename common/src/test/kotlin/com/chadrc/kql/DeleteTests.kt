@@ -23,7 +23,7 @@ class DeleteTests {
     fun testDeleteWhereClause() {
         val query = kqlDelete<Post> {
             where {
-                it::id eq 1
+                Post::id eq 1
             }
         }
 

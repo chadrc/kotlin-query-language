@@ -27,7 +27,7 @@ class UpdateTests {
     fun testUpdateWhereClause() {
         val query = kqlUpdate<Post> {
             where {
-                it::id eq 1
+                Post::id eq 1
             }
         }
 
@@ -37,7 +37,7 @@ class UpdateTests {
     @Test
     fun testToValue() {
         val query = kqlUpdate<Post> {
-            it::text toValue "Updated Text"
+            Post::text toValue "Updated Text"
         }
 
         assertEquals(1, query.changes.size)
@@ -46,7 +46,7 @@ class UpdateTests {
     @Test
     fun testUnsetUnary() {
         val query = kqlUpdate<Post> {
-            -it::author
+            -Post::author
         }
 
         assertEquals(1, query.changes.size)
@@ -56,7 +56,7 @@ class UpdateTests {
     @Test
     fun testUnsetFunctionSyntax() {
         val query = kqlUpdate<Post> {
-            unset(it::author)
+            unset(Post::author)
         }
 
         assertEquals(1, query.changes.size)
@@ -66,7 +66,7 @@ class UpdateTests {
     @Test
     fun testIncKeyword() {
         val query = kqlUpdate<Post> {
-            it::ranking add 2
+            Post::ranking add 2
         }
 
         assertEquals(1, query.changes.size)
@@ -79,7 +79,7 @@ class UpdateTests {
     @Test
     fun testIncAssignment() {
         val query = kqlUpdate<Post> {
-            it::ranking += 2
+            Post::ranking += 2
         }
 
         assertEquals(1, query.changes.size)
@@ -92,7 +92,7 @@ class UpdateTests {
     @Test
     fun testDecKeyword() {
         val query = kqlUpdate<Post> {
-            it::ranking sub 2
+            Post::ranking sub 2
         }
 
         assertEquals(1, query.changes.size)
@@ -105,7 +105,7 @@ class UpdateTests {
     @Test
     fun testDecAssignment() {
         val query = kqlUpdate<Post> {
-            it::ranking -= 2
+            Post::ranking -= 2
         }
 
         assertEquals(1, query.changes.size)
@@ -118,7 +118,7 @@ class UpdateTests {
     @Test
     fun testMulKeyword() {
         val query = kqlUpdate<Post> {
-            it::ranking mul 2
+            Post::ranking mul 2
         }
 
         assertEquals(1, query.changes.size)
@@ -131,7 +131,7 @@ class UpdateTests {
     @Test
     fun testMulAssignment() {
         val query = kqlUpdate<Post> {
-            it::ranking *= 2
+            Post::ranking *= 2
         }
 
         assertEquals(1, query.changes.size)
@@ -144,7 +144,7 @@ class UpdateTests {
     @Test
     fun testDivKeyword() {
         val query = kqlUpdate<Post> {
-            it::ranking div 2
+            Post::ranking div 2
         }
 
         assertEquals(1, query.changes.size)
@@ -157,7 +157,7 @@ class UpdateTests {
     @Test
     fun testDivAssignment() {
         val query = kqlUpdate<Post> {
-            it::ranking /= 2
+            Post::ranking /= 2
         }
 
         assertEquals(1, query.changes.size)
@@ -170,7 +170,7 @@ class UpdateTests {
     @Test
     fun testRemKeyword() {
         val query = kqlUpdate<Post> {
-            it::ranking rem 2
+            Post::ranking rem 2
         }
 
         assertEquals(1, query.changes.size)
@@ -183,7 +183,7 @@ class UpdateTests {
     @Test
     fun testRemAssignment() {
         val query = kqlUpdate<Post> {
-            it::ranking %= 2
+            Post::ranking %= 2
         }
 
         assertEquals(1, query.changes.size)

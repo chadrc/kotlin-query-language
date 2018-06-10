@@ -4,6 +4,7 @@ import com.chadrc.kql.clauses.WhereClauseBuilder
 import com.chadrc.kql.exceptions.CannotSortSamePropertyTwice
 import com.chadrc.kql.exceptions.CannotSubtractAndAddFieldsException
 import com.chadrc.kql.exceptions.NoStubConstructorException
+import com.chadrc.kql.models.Author
 import com.chadrc.kql.models.NoStubModel
 import com.chadrc.kql.models.Post
 import com.chadrc.kql.statements.Select
@@ -16,8 +17,8 @@ class SelectTests {
     fun testSelectBuilder() {
         val query = Select(Post::class) {
             fields {
-                +it::id
-                +it::text
+                +Post::id
+                +Post::text
             }
         }
 
@@ -28,7 +29,7 @@ class SelectTests {
     fun testSelectBuilderHelper() {
         val query = kqlSelect<Post> {
             fields {
-                +it::id
+                +Post::id
             }
         }
 
@@ -39,7 +40,7 @@ class SelectTests {
     fun testMinusField() {
         val query = kqlSelect<Post> {
             fields {
-                -it::id
+                -Post::id
             }
         }
 
@@ -51,8 +52,8 @@ class SelectTests {
         assertFailsWith<CannotSubtractAndAddFieldsException> {
             Select(Post::class) {
                 fields {
-                    +it::text
-                    -it::id
+                    +Post::text
+                    -Post::id
                 }
             }
         }
@@ -63,7 +64,7 @@ class SelectTests {
         assertFailsWith<NoStubConstructorException> {
             Select(NoStubModel::class) {
                 fields {
-                    +it::id
+                    +Post::id
                 }
             }
         }
@@ -73,9 +74,9 @@ class SelectTests {
     fun testSubObjectWithFields() {
         val query = kqlSelect<Post> {
             fields {
-                it::author withFields {
-                    +it::firstName
-                    +it::lastName
+                Post::author withFields {
+                    +Author::firstName
+                    +Author::lastName
                 }
             }
         }
@@ -89,7 +90,7 @@ class SelectTests {
     fun testWhereClause() {
         val query = kqlSelect<Post> {
             where {
-                it::id eq 0
+                Post::id eq 0
             }
         }
 
@@ -103,22 +104,22 @@ class SelectTests {
 
         val query = kqlSelect<Post> {
             where {
-                it::id eq 0
-                it::id ne 0
+                Post::id eq 0
+                Post::id ne 0
 
-                it::published gt minDate
-                it::published gte minDate
+                Post::published gt minDate
+                Post::published gte minDate
 
-                it::published lt maxDate
-                it::published lte maxDate
+                Post::published lt maxDate
+                Post::published lte maxDate
 
-                it::published within minDate..maxDate
-                it::published notWithin minDate..maxDate
+                Post::published within minDate..maxDate
+                Post::published notWithin minDate..maxDate
 
-                it::topic within listOf("Food", "Photography", "Music")
-                it::topic notWithin listOf("Food", "Photography", "Music")
+                Post::topic within listOf("Food", "Photography", "Music")
+                Post::topic notWithin listOf("Food", "Photography", "Music")
 
-                it::text matches "Tutorial"
+                Post::text matches "Tutorial"
             }
         }
 
@@ -133,13 +134,13 @@ class SelectTests {
         val query = kqlSelect<Post> {
             where {
                 all {
-                    it::topic eq "Food"
-                    it::text matches "Tutorial"
+                    Post::topic eq "Food"
+                    Post::text matches "Tutorial"
                 }
 
                 any {
-                    it::topic eq "Food"
-                    it::published within minDate..maxDate
+                    Post::topic eq "Food"
+                    Post::published within minDate..maxDate
                 }
             }
         }
@@ -159,8 +160,8 @@ class SelectTests {
     fun testSortClause() {
         val query = kqlSelect<Post> {
             sort {
-                +it::published
-                -it::author
+                +Post::published
+                -Post::author
             }
         }
 
@@ -172,8 +173,8 @@ class SelectTests {
         assertFailsWith<CannotSortSamePropertyTwice> {
             kqlSelect<Post> {
                 sort {
-                    +it::published
-                    -it::published
+                    +Post::published
+                    -Post::published
                 }
             }
         }
