@@ -1,14 +1,15 @@
 package com.chadrc.kql
 
+import com.chadrc.kql.exceptions.LeftPropOperandNotOnQueryClass
+import com.chadrc.kql.exceptions.RightPropOperandNotOnInputClass
+import com.chadrc.kql.models.Author
 import com.chadrc.kql.models.Post
 import com.chadrc.kql.statements.MathOperation
 import com.chadrc.kql.statements.Operation
 import com.chadrc.kql.statements.Unset
 import com.chadrc.kql.statements.Update
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.reflect.KProperty
+import kotlin.test.*
 
 class UpdateTests {
 
@@ -191,5 +192,45 @@ class UpdateTests {
         val change = query.changes[0]
         assertTrue(change is MathOperation<*>)
         assertTrue((change as MathOperation<*>).op == Operation.Remainder)
+    }
+
+    class UpdateInput(val search: String, val minRank: Int)
+
+    @Test
+    fun withWhereClauseInput() {
+        val query = kqlDelete<Post, UpdateInput> {
+            where {
+                Post::text matches UpdateInput::search
+                Post::ranking gte UpdateInput::minRank
+            }
+        }
+
+        val conditions = query.conditions
+        val one = conditions[0]
+        val two = conditions[1]
+        assertTrue(one.value is KProperty<*>)
+        assertTrue(two.value is KProperty<*>)
+    }
+
+    @Test
+    fun errorWhenUsingNonModelProperty() {
+        assertFailsWith<LeftPropOperandNotOnQueryClass> {
+            kqlDelete<Post, Any> {
+                where {
+                    Author::firstName eq "John"
+                }
+            }
+        }
+    }
+
+    @Test
+    fun errorWhenUsingNonInputProperty() {
+        assertFailsWith<RightPropOperandNotOnInputClass> {
+            kqlDelete<Post, UpdateInput> {
+                where {
+                    Post::text eq Author::firstName
+                }
+            }
+        }
     }
 }

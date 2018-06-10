@@ -1,10 +1,12 @@
 package com.chadrc.kql
 
+import com.chadrc.kql.exceptions.LeftPropOperandNotOnQueryClass
+import com.chadrc.kql.exceptions.RightPropOperandNotOnInputClass
+import com.chadrc.kql.models.Author
 import com.chadrc.kql.models.Post
 import com.chadrc.kql.statements.Delete
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
+import kotlin.reflect.KProperty
+import kotlin.test.*
 
 class DeleteTests {
 
@@ -37,5 +39,45 @@ class DeleteTests {
         }
 
         assertEquals(true, query.deleteAll)
+    }
+
+    class DeleteInput(val search: String, val minRank: Int)
+
+    @Test
+    fun selectWithInput() {
+        val query = kqlDelete<Post, DeleteInput> {
+            where {
+                Post::text matches DeleteInput::search
+                Post::ranking gte DeleteInput::minRank
+            }
+        }
+
+        val conditions = query.conditions
+        val one = conditions[0]
+        val two = conditions[1]
+        assertTrue(one.value is KProperty<*>)
+        assertTrue(two.value is KProperty<*>)
+    }
+
+    @Test
+    fun errorWhenUsingNonModelProperty() {
+        assertFailsWith<LeftPropOperandNotOnQueryClass> {
+            kqlDelete<Post, Any> {
+                where {
+                    Author::firstName eq "John"
+                }
+            }
+        }
+    }
+
+    @Test
+    fun errorWhenUsingNonInputProperty() {
+        assertFailsWith<RightPropOperandNotOnInputClass> {
+            kqlDelete<Post, DeleteInput> {
+                where {
+                    Post::text eq Author::firstName
+                }
+            }
+        }
     }
 }
