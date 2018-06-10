@@ -15,10 +15,14 @@ class Post(
 ```kotlin
 val query = Insert(Post::class) {
     // At least one required
-    +Post("Some content")
+    values {
+        it::text eq "Some Content"
+    }
     
-    // Can add more for multi insert
-    +Post("Another post")
+    // Insert more than one
+    values {
+        it::text eq "More Content"
+    }
 }
 ```
 

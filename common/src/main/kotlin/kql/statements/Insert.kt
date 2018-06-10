@@ -1,7 +1,9 @@
 package kql.statements
 
-class Insert<T : Any>(init: InsertBuilder<T>.() -> Unit) {
-    private val insertBuilder = InsertBuilder<T>()
+import kotlin.reflect.KClass
+
+class Insert<T : Any>(kClass: KClass<T>, init: InsertBuilder<T>.() -> Unit) {
+    private val insertBuilder = InsertBuilder(kClass)
 
     val records = insertBuilder.records
 
