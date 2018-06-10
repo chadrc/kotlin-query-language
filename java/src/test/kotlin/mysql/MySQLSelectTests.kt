@@ -4,7 +4,7 @@ import Post
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class MySQLQueryTests {
+class MySQLSelectTests {
     private val allPostFields = "author,authorId,id,published,ranking,sticky,text,topic"
 
     @Test
