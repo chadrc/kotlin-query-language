@@ -18,8 +18,8 @@ class MySQLSelectTests {
     fun testSelectWithPlusField() {
         val query = kqlMySQLSelect<Post> {
             fields {
-                +it::id
-                +it::authorId
+                +Post::id
+                +Post::authorId
             }
         }
 
@@ -30,8 +30,8 @@ class MySQLSelectTests {
     fun testSelectWithMinusField() {
         val query = kqlMySQLSelect<Post> {
             fields {
-                -it::author
-                -it::ranking
+                -Post::author
+                -Post::ranking
             }
         }
 
@@ -42,7 +42,7 @@ class MySQLSelectTests {
     fun testSelectWithWhereEq() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::id eq 1
+                Post::id eq 1
             }
         }
 
@@ -53,8 +53,8 @@ class MySQLSelectTests {
     fun testSelectWithMultipleConditions() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::topic eq "Food"
-                it::sticky eq true
+                Post::topic eq "Food"
+                Post::sticky eq true
             }
         }
 
@@ -65,7 +65,7 @@ class MySQLSelectTests {
     fun testSelectWithNotEqual() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::topic ne "Food"
+                Post::topic ne "Food"
             }
         }
 
@@ -76,7 +76,7 @@ class MySQLSelectTests {
     fun testSelectWithGreaterThan() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::ranking gt 100
+                Post::ranking gt 100
             }
         }
 
@@ -87,7 +87,7 @@ class MySQLSelectTests {
     fun testSelectWithGreaterThanEqual() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::ranking gte 100
+                Post::ranking gte 100
             }
         }
 
@@ -98,7 +98,7 @@ class MySQLSelectTests {
     fun testSelectWithLessThan() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::ranking lt 100
+                Post::ranking lt 100
             }
         }
 
@@ -109,7 +109,7 @@ class MySQLSelectTests {
     fun testSelectWithLessThanEqual() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::ranking lte 100
+                Post::ranking lte 100
             }
         }
 
@@ -120,7 +120,7 @@ class MySQLSelectTests {
     fun testSelectWithWithinList() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::topic within listOf("Food", "Photography", "Music")
+                Post::topic within listOf("Food", "Photography", "Music")
             }
         }
 
@@ -131,7 +131,7 @@ class MySQLSelectTests {
     fun testSelectWithNotWithinList() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::topic notWithin listOf("Food", "Photography", "Music")
+                Post::topic notWithin listOf("Food", "Photography", "Music")
             }
         }
 
@@ -142,7 +142,7 @@ class MySQLSelectTests {
     fun testSelectWithWithinRange() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::ranking within 100..200
+                Post::ranking within 100..200
             }
         }
 
@@ -153,7 +153,7 @@ class MySQLSelectTests {
     fun testSelectWithNotWithinRange() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::ranking notWithin 100..200
+                Post::ranking notWithin 100..200
             }
         }
 
@@ -164,7 +164,7 @@ class MySQLSelectTests {
     fun testMatches() {
         val query = kqlMySQLSelect<Post> {
             where {
-                it::text matches "Tutorial"
+                Post::text matches "Tutorial"
             }
         }
 
@@ -176,8 +176,8 @@ class MySQLSelectTests {
         val query = kqlMySQLSelect<Post> {
             where {
                 all {
-                    it::topic eq "Food"
-                    it::ranking gte 100
+                    Post::topic eq "Food"
+                    Post::ranking gte 100
                 }
             }
         }
@@ -190,8 +190,8 @@ class MySQLSelectTests {
         val query = kqlMySQLSelect<Post> {
             where {
                 any {
-                    it::topic eq "Food"
-                    it::ranking gte 100
+                    Post::topic eq "Food"
+                    Post::ranking gte 100
                 }
             }
         }
@@ -205,23 +205,23 @@ class MySQLSelectTests {
             where {
                 any {
                     all {
-                        it::topic eq "Food"
-                        it::ranking gte 100
+                        Post::topic eq "Food"
+                        Post::ranking gte 100
                     }
 
                     all {
-                        it::authorId eq 10
-                        it::ranking gte 50
+                        Post::authorId eq 10
+                        Post::ranking gte 50
 
                         any {
-                            it::topic eq "Technology"
-                            it::topic eq "Music"
+                            Post::topic eq "Technology"
+                            Post::topic eq "Music"
                         }
                     }
                 }
 
-                it::text matches "Tutorial"
-                it::sticky eq true
+                Post::text matches "Tutorial"
+                Post::sticky eq true
             }
         }
 
@@ -232,7 +232,7 @@ class MySQLSelectTests {
     fun testSortAscending() {
         val query = kqlMySQLSelect<Post> {
             sort {
-                +it::authorId
+                +Post::authorId
             }
         }
 
@@ -243,7 +243,7 @@ class MySQLSelectTests {
     fun testSortDescending() {
         val query = kqlMySQLSelect<Post> {
             sort {
-                -it::authorId
+                -Post::authorId
             }
         }
 
@@ -254,8 +254,8 @@ class MySQLSelectTests {
     fun testMultipleSorts() {
         val query = kqlMySQLSelect<Post> {
             sort {
-                -it::authorId
-                +it::ranking
+                -Post::authorId
+                +Post::ranking
             }
         }
 

@@ -1,7 +1,6 @@
 package com.chadrc.kql.statements
 
 import com.chadrc.kql.clauses.WhereClauseBuilder
-import com.chadrc.kql.utils.stubInstanceAction
 import kotlin.reflect.KClass
 
 class CountBuilder<T : Any>(private val kClass: KClass<T>) {
@@ -9,8 +8,8 @@ class CountBuilder<T : Any>(private val kClass: KClass<T>) {
 
     val conditions get() = _whereClauseBuilder?.conditions
 
-    fun where(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
+    fun where(init: WhereClauseBuilder<T>.() -> Unit) {
         _whereClauseBuilder = WhereClauseBuilder(kClass)
-        kClass.stubInstanceAction { _whereClauseBuilder?.init(it) }
+        _whereClauseBuilder?.init()
     }
 }

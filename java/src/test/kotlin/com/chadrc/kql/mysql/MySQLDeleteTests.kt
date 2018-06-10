@@ -9,7 +9,7 @@ class MySQLDeleteTests {
     fun deleteCondition() {
         val query = kqlMySQLDelete<Post> {
             where {
-                it::id eq 1
+                Post::id eq 1
             }
         }
 

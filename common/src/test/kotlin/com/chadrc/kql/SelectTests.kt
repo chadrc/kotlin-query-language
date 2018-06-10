@@ -3,9 +3,7 @@ package com.chadrc.kql
 import com.chadrc.kql.clauses.WhereClauseBuilder
 import com.chadrc.kql.exceptions.CannotSortSamePropertyTwice
 import com.chadrc.kql.exceptions.CannotSubtractAndAddFieldsException
-import com.chadrc.kql.exceptions.NoStubConstructorException
 import com.chadrc.kql.models.Author
-import com.chadrc.kql.models.NoStubModel
 import com.chadrc.kql.models.Post
 import com.chadrc.kql.statements.Select
 import kotlin.test.Test
@@ -54,17 +52,6 @@ class SelectTests {
                 fields {
                     +Post::text
                     -Post::id
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testSelectBuilderWithInvalidModel() {
-        assertFailsWith<NoStubConstructorException> {
-            Select(NoStubModel::class) {
-                fields {
-                    +Post::id
                 }
             }
         }

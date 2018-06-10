@@ -9,7 +9,7 @@ class MySQLUpdateTests {
     @Test
     fun updateSingleValue() {
         val query = kqlMySQLUpdate<Post> {
-            it::topic toValue "Food"
+            Post::topic toValue "Food"
         }
 
         assertEquals("UPDATE Post SET topic='Food'", query.queryString)
@@ -18,8 +18,8 @@ class MySQLUpdateTests {
     @Test
     fun updateMultipleValues() {
         val query = kqlMySQLUpdate<Post> {
-            it::topic toValue "Food"
-            it::sticky toValue true
+            Post::topic toValue "Food"
+            Post::sticky toValue true
         }
 
         assertEquals("UPDATE Post SET topic='Food',sticky=TRUE", query.queryString)
@@ -28,11 +28,11 @@ class MySQLUpdateTests {
     @Test
     fun updateWithConditions() {
         val query = kqlMySQLUpdate<Post> {
-            it::topic toValue "Food"
-            it::sticky toValue true
+            Post::topic toValue "Food"
+            Post::sticky toValue true
 
             where {
-                it::id eq 1
+                Post::id eq 1
             }
         }
 
@@ -42,11 +42,11 @@ class MySQLUpdateTests {
     @Test
     fun unsetUpdate() {
         val unary = kqlMySQLUpdate<Post> {
-            -it::topic
+            -Post::topic
         }
 
         val keyword = kqlMySQLUpdate<Post> {
-            unset(it::topic)
+            unset(Post::topic)
         }
 
         val expected = "UPDATE Post SET topic=NULL"
@@ -58,11 +58,11 @@ class MySQLUpdateTests {
     @Test
     fun addOperation() {
         val operator = kqlMySQLUpdate<Post> {
-            it::ranking += 10
+            Post::ranking += 10
         }
 
         val keyword = kqlMySQLUpdate<Post> {
-            it::ranking add 10
+            Post::ranking add 10
         }
 
         val expected = "UPDATE Post SET ranking=(ranking+10)"
@@ -74,11 +74,11 @@ class MySQLUpdateTests {
     @Test
     fun subOperation() {
         val operator = kqlMySQLUpdate<Post> {
-            it::ranking -= 10
+            Post::ranking -= 10
         }
 
         val keyword = kqlMySQLUpdate<Post> {
-            it::ranking sub 10
+            Post::ranking sub 10
         }
 
         val expected = "UPDATE Post SET ranking=(ranking-10)"
@@ -90,11 +90,11 @@ class MySQLUpdateTests {
     @Test
     fun mulOperation() {
         val operator = kqlMySQLUpdate<Post> {
-            it::ranking *= 10
+            Post::ranking *= 10
         }
 
         val keyword = kqlMySQLUpdate<Post> {
-            it::ranking mul 10
+            Post::ranking mul 10
         }
 
         val expected = "UPDATE Post SET ranking=(ranking*10)"
@@ -106,11 +106,11 @@ class MySQLUpdateTests {
     @Test
     fun divOperation() {
         val operator = kqlMySQLUpdate<Post> {
-            it::ranking /= 10
+            Post::ranking /= 10
         }
 
         val keyword = kqlMySQLUpdate<Post> {
-            it::ranking div 10
+            Post::ranking div 10
         }
 
         val expected = "UPDATE Post SET ranking=(ranking/10)"
@@ -122,11 +122,11 @@ class MySQLUpdateTests {
     @Test
     fun remOperation() {
         val operator = kqlMySQLUpdate<Post> {
-            it::ranking %= 10
+            Post::ranking %= 10
         }
 
         val keyword = kqlMySQLUpdate<Post> {
-            it::ranking rem 10
+            Post::ranking rem 10
         }
 
         val expected = "UPDATE Post SET ranking=(ranking%10)"

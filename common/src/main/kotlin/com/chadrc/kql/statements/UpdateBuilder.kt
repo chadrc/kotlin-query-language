@@ -1,7 +1,6 @@
 package com.chadrc.kql.statements
 
 import com.chadrc.kql.clauses.WhereClauseBuilder
-import com.chadrc.kql.utils.stubInstanceAction
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -29,9 +28,9 @@ class UpdateBuilder<T : Any>(private val kClass: KClass<T>) {
     val conditions get() = _whereClauseBuilder?.conditions
     val changes get() = _changes
 
-    fun where(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
+    fun where(init: WhereClauseBuilder<T>.() -> Unit) {
         _whereClauseBuilder = WhereClauseBuilder(kClass)
-        kClass.stubInstanceAction { _whereClauseBuilder?.init(it) }
+        _whereClauseBuilder?.init()
     }
 
     infix fun <T> KProperty<T>.toValue(v: T) {

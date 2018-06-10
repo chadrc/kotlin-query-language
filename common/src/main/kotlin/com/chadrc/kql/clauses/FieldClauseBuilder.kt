@@ -1,8 +1,6 @@
 package com.chadrc.kql.clauses
 
 import com.chadrc.kql.exceptions.CannotSubtractAndAddFieldsException
-import com.chadrc.kql.utils.stubInstanceAction
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 interface FieldSelector {
@@ -39,14 +37,10 @@ class FieldClauseBuilder : FieldSelector {
     }
 
     infix fun <P : Any> KProperty<P?>.withFields(
-            init: FieldClauseBuilder.(it: P) -> Unit
+            init: FieldClauseBuilder.() -> Unit
     ) {
         val builder = FieldClauseBuilder()
-        @Suppress("UNCHECKED_CAST")
-        val pClass = this.returnType.classifier as? KClass<P>
-                ?: throw Error("Property ${this.name} of type ${this.returnType} not of a class.")
-
-        pClass.stubInstanceAction { builder.init(it) }
+        builder.init()
         includedFields.add(FieldProjection(this, builder.includedFields, builder.excludedFields))
     }
 }

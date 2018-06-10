@@ -3,7 +3,6 @@ package com.chadrc.kql.statements
 import com.chadrc.kql.clauses.FieldClauseBuilder
 import com.chadrc.kql.clauses.SortClauseBuilder
 import com.chadrc.kql.clauses.WhereClauseBuilder
-import com.chadrc.kql.utils.stubInstanceAction
 import kotlin.reflect.KClass
 
 class SelectBuilder<T : Any>(private val kClass: KClass<T>) {
@@ -19,19 +18,19 @@ class SelectBuilder<T : Any>(private val kClass: KClass<T>) {
     val limit get() = _limit
     val offset get() = _offset
 
-    fun fields(init: FieldClauseBuilder.(it: T) -> Unit) {
+    fun fields(init: FieldClauseBuilder.() -> Unit) {
         _fieldClauseBuilder = FieldClauseBuilder()
-        kClass.stubInstanceAction { _fieldClauseBuilder?.init(it) }
+        _fieldClauseBuilder?.init()
     }
 
-    fun where(init: WhereClauseBuilder<T>.(it: T) -> Unit) {
+    fun where(init: WhereClauseBuilder<T>.() -> Unit) {
         _whereClauseBuilder = WhereClauseBuilder(kClass)
-        kClass.stubInstanceAction { _whereClauseBuilder?.init(it) }
+        _whereClauseBuilder?.init()
     }
 
-    fun sort(init: SortClauseBuilder.(it: T) -> Unit) {
+    fun sort(init: SortClauseBuilder.() -> Unit) {
         _sortClauseBuilder = SortClauseBuilder()
-        kClass.stubInstanceAction { _sortClauseBuilder?.init(it) }
+        _sortClauseBuilder?.init()
     }
 
     fun limit(amount: Int) {

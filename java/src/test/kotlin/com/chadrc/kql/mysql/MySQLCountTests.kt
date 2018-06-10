@@ -17,8 +17,8 @@ class MySQLCountTests {
     fun countWithConditions() {
         val query = kqlMySQLCount<Post> {
             where {
-                it::ranking gt 100
-                it::topic eq "Food"
+                Post::ranking gt 100
+                Post::topic eq "Food"
             }
         }
 

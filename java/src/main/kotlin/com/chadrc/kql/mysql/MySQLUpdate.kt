@@ -3,7 +3,7 @@ package com.chadrc.kql.mysql
 import com.chadrc.kql.statements.*
 import kotlin.reflect.KClass
 
-class MySQLUpdate<T : Any>(private val kClass: KClass<T>, init: UpdateBuilder<T>.(T) -> Unit) {
+class MySQLUpdate<T : Any>(private val kClass: KClass<T>, init: UpdateBuilder<T>.() -> Unit) {
     private val update = Update(kClass, init)
 
     val queryString: String
@@ -42,4 +42,4 @@ class MySQLUpdate<T : Any>(private val kClass: KClass<T>, init: UpdateBuilder<T>
     }
 }
 
-inline fun <reified T : Any> kqlMySQLUpdate(noinline init: UpdateBuilder<T>.(T) -> Unit) = MySQLUpdate(T::class, init)
+inline fun <reified T : Any> kqlMySQLUpdate(noinline init: UpdateBuilder<T>.() -> Unit) = MySQLUpdate(T::class, init)
