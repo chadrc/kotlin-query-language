@@ -17,7 +17,9 @@ class MySQLInsert<T : Any>(private val kClass: KClass<T>, init: InsertBuilder<T>
             for (record in insert.records) {
                 val propToValMap = HashMap<String, Any?>()
                 for (valuePair in record.valuePairs) {
-                    propList.add(valuePair.prop.name)
+                    if (!propList.contains(valuePair.prop.name)) {
+                        propList.add(valuePair.prop.name)
+                    }
                     propToValMap[valuePair.prop.name] = valuePair.value
                 }
 
