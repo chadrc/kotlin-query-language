@@ -11,17 +11,15 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
 
     val queryString: String
         get() {
-            var fieldSelection = "*"
-            if (select.fields.isNotEmpty()) {
-                fieldSelection = ""
-
-                for (f in select.fields) {
-                    fieldSelection = "$fieldSelection${f.prop.name},"
-                }
-
-                // Remove trailing comma
-                fieldSelection = fieldSelection.slice(0 until fieldSelection.length - 1)
+            var fieldSelection = ""
+            for (f in select.fields) {
+                fieldSelection = "$fieldSelection${f.prop.name},"
             }
+
+            // Remove trailing comma
+            fieldSelection = fieldSelection.slice(0 until fieldSelection.length - 1)
+
+            val selectClause = "SELECT $fieldSelection FROM ${kClass.simpleName}"
 
             val whereClause = if (select.conditions.isNotEmpty()) {
                 val conditionList = ArrayList<String>()
@@ -48,7 +46,7 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
 
             val offsetClause = if (select.offset > -1) " OFFSET ${select.offset}" else ""
 
-            return "SELECT $fieldSelection FROM ${kClass.simpleName}$whereClause$sortClause$limitClause$offsetClause"
+            return "$selectClause$whereClause$sortClause$limitClause$offsetClause"
         }
 
     private fun makeConditionString(condition: WhereClauseBuilder.Condition): String {
