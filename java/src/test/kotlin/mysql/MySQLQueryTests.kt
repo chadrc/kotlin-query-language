@@ -270,4 +270,13 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post LIMIT 15", query.queryString)
     }
+
+    @Test
+    fun testOffset() {
+        val query = kqlMySQLSelect<Post> {
+            offset(15)
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post OFFSET 15", query.queryString)
+    }
 }

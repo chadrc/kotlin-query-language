@@ -46,7 +46,9 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
 
             val limitClause = if (select.limit > 0) " LIMIT ${select.limit}" else ""
 
-            return "SELECT $fieldSelection FROM ${kClass.simpleName}$whereClause$sortClause$limitClause"
+            val offsetClause = if (select.offset > -1) " OFFSET ${select.offset}" else ""
+
+            return "SELECT $fieldSelection FROM ${kClass.simpleName}$whereClause$sortClause$limitClause$offsetClause"
         }
 
     private fun makeConditionString(condition: WhereClauseBuilder.Condition): String {
