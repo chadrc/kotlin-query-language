@@ -15,10 +15,6 @@ class ValuesBuilder {
         _valuePairs.add(ValuePair(this, value))
     }
 
-    infix fun <T : Any> KProperty<T>.eq(input: Input<T>) {
-        _valuePairs.add(ValuePair(this, input))
-    }
-
     infix fun <T> KProperty<T>.eq(prop: KProperty<T>) {
         _valuePairs.add(ValuePair(this, prop))
     }
