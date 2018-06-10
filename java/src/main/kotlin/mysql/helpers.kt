@@ -2,7 +2,7 @@ package mysql
 
 fun valueToMySQL(value: Any?): String {
     if (value == null) {
-        return "null"
+        return "NULL"
     }
 
     // Wrap strings in single quotes for SQL
