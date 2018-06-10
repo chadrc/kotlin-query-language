@@ -17,11 +17,13 @@ val query = Insert(Post::class) {
     // At least one required
     values {
         it::text eq "Some Content"
+        it::topic eq "Food"
     }
     
     // Insert more than one
     values {
         it::text eq "More Content"
+        it::topic eq "Technology"
     }
 }
 ```
