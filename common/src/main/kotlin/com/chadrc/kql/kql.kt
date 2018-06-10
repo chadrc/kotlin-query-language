@@ -2,8 +2,11 @@ package com.chadrc.kql
 
 import com.chadrc.kql.statements.*
 
-inline fun <reified T : Any> kqlInsert(noinline insertBuilder: InsertBuilder<T>.() -> Unit) =
-        Insert(T::class, insertBuilder)
+//inline fun <reified T : Any> kqlInsert(noinline insertBuilder: InsertBuilder<T, Nothing>.() -> Unit) =
+//        Insert(T::class, Nothing::class, insertBuilder)
+
+inline fun <reified T : Any, reified I : Any> kqlInsert(noinline insertBuilder: InsertBuilder<T, I>.() -> Unit) =
+        Insert(T::class, I::class, insertBuilder)
 
 inline fun <reified T : Any> kqlSelect(noinline selectBuilder: SelectBuilder<T>.() -> Unit) =
         Select(T::class, selectBuilder)

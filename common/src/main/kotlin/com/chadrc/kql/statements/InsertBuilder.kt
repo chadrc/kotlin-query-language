@@ -18,9 +18,13 @@ class ValuesBuilder {
     infix fun <T : Any> KProperty<T>.eq(input: Input<T>) {
         _valuePairs.add(ValuePair(this, input))
     }
+
+    infix fun <T> KProperty<T>.eq(prop: KProperty<T>) {
+        _valuePairs.add(ValuePair(this, prop))
+    }
 }
 
-class InsertBuilder<T : Any>(private val kClass: KClass<T>) {
+class InsertBuilder<T : Any, I : Any>(private val kClass: KClass<T>, private val inputClass: KClass<I>) {
     private val _records = ArrayList<ValuesBuilder>()
 
     val records get() = _records

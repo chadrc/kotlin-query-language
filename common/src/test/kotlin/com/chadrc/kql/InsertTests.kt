@@ -1,16 +1,17 @@
 package com.chadrc.kql
 
-import com.chadrc.kql.statements.Input
 import com.chadrc.kql.statements.Insert
-import com.chadrc.kql.statements.input
+import kotlin.reflect.KProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+class PostTextInput(val text: String)
+
 class InsertTests {
     @Test
     fun testBuildInsertQuery() {
-        val query = Insert(Post::class) {
+        val query = Insert(Post::class, Nothing::class) {
             values {
                 it::text eq "First Post"
             }
@@ -25,7 +26,7 @@ class InsertTests {
 
     @Test
     fun testInsertHelper() {
-        val query = kqlInsert<Post> {
+        val query = kqlInsert<Post, Any> {
             values {
                 it::text eq "First Post"
             }
@@ -40,14 +41,14 @@ class InsertTests {
 
     @Test
     fun testInput() {
-        val query = kqlInsert<Post> {
+        val query = kqlInsert<Post, PostTextInput> {
             values {
-                it::text eq input("text")
+                it::text eq PostTextInput::text
             }
         }
 
         val firstRecord = query.records[0]
         val firstValuePair = firstRecord.valuePairs[0]
-        assertTrue(firstValuePair.value is Input<*>)
+        assertTrue(firstValuePair.value is KProperty<*>)
     }
 }
