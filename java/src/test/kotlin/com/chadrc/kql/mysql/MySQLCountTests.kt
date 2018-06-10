@@ -12,4 +12,16 @@ class MySQLCountTests {
 
         assertEquals("SELECT COUNT(*) FROM Post", query.queryString)
     }
+
+    @Test
+    fun countWithConditions() {
+        val query = kqlMySQLCount<Post> {
+            where {
+                it::ranking gt 100
+                it::topic eq "Food"
+            }
+        }
+
+        assertEquals("SELECT COUNT(*) FROM Post WHERE (ranking>100) AND (topic='Food')", query.queryString)
+    }
 }

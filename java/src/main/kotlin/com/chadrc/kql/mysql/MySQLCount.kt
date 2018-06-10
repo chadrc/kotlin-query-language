@@ -10,7 +10,8 @@ class MySQLCount<T : Any>(private val kClass: KClass<T>, init: CountBuilder<T>.(
     val queryString: String
         get() {
             val typeName = kClass.simpleName
-            return "SELECT COUNT(*) FROM $typeName"
+            val whereClause = makeWhereConditionString(count.conditions)
+            return "SELECT COUNT(*) FROM $typeName$whereClause"
         }
 }
 
