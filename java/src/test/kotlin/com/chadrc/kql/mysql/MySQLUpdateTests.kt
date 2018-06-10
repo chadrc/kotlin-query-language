@@ -14,4 +14,14 @@ class MySQLUpdateTests {
 
         assertEquals("UPDATE Post SET topic='Food'", query.queryString)
     }
+
+    @Test
+    fun updateMultipleValues() {
+        val query = kqlMySQLUpdate<Post> {
+            it::topic toValue "Food"
+            it::sticky toValue true
+        }
+
+        assertEquals("UPDATE Post SET topic='Food',sticky=TRUE", query.queryString)
+    }
 }
