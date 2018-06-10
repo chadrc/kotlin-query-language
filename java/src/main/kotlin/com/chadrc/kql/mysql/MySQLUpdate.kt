@@ -29,10 +29,13 @@ class MySQLUpdate<T : Any>(private val kClass: KClass<T>, init: UpdateBuilder<T>
 
     private fun makeMathOperation(operation: MathOperation<*>): String {
         val propName = operation.prop.name
+        val valueStr = valueToMySQL(operation.value)
         val mathStr = when (operation.op) {
-            Operation.Increment -> "$propName+${valueToMySQL(operation.value)}"
-
-            else -> throw Error("Unsupported math operation ${operation.op}")
+            Operation.Increment -> "$propName+$valueStr"
+            Operation.Decrement -> "$propName-$valueStr"
+            Operation.Multiply -> "$propName*$valueStr"
+            Operation.Divide -> "$propName/$valueStr"
+            Operation.Remainder -> "$propName%$valueStr"
         }
 
         return "$propName=($mathStr)"

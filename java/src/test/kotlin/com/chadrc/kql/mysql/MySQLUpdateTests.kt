@@ -70,4 +70,68 @@ class MySQLUpdateTests {
         assertEquals(expected, operator.queryString)
         assertEquals(expected, keyword.queryString)
     }
+
+    @Test
+    fun subOperation() {
+        val operator = kqlMySQLUpdate<Post> {
+            it::ranking -= 10
+        }
+
+        val keyword = kqlMySQLUpdate<Post> {
+            it::ranking sub 10
+        }
+
+        val expected = "UPDATE Post SET ranking=(ranking-10)"
+
+        assertEquals(expected, operator.queryString)
+        assertEquals(expected, keyword.queryString)
+    }
+
+    @Test
+    fun mulOperation() {
+        val operator = kqlMySQLUpdate<Post> {
+            it::ranking *= 10
+        }
+
+        val keyword = kqlMySQLUpdate<Post> {
+            it::ranking mul 10
+        }
+
+        val expected = "UPDATE Post SET ranking=(ranking*10)"
+
+        assertEquals(expected, operator.queryString)
+        assertEquals(expected, keyword.queryString)
+    }
+
+    @Test
+    fun divOperation() {
+        val operator = kqlMySQLUpdate<Post> {
+            it::ranking /= 10
+        }
+
+        val keyword = kqlMySQLUpdate<Post> {
+            it::ranking div 10
+        }
+
+        val expected = "UPDATE Post SET ranking=(ranking/10)"
+
+        assertEquals(expected, operator.queryString)
+        assertEquals(expected, keyword.queryString)
+    }
+
+    @Test
+    fun remOperation() {
+        val operator = kqlMySQLUpdate<Post> {
+            it::ranking %= 10
+        }
+
+        val keyword = kqlMySQLUpdate<Post> {
+            it::ranking rem 10
+        }
+
+        val expected = "UPDATE Post SET ranking=(ranking%10)"
+
+        assertEquals(expected, operator.queryString)
+        assertEquals(expected, keyword.queryString)
+    }
 }
