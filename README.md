@@ -39,7 +39,7 @@ val query = Insert(Post::class, InsertInput::class) {
 
 ### Read
 ```kotlin
-val query = Select(Post::class) {
+val query = Select(Post::class, Any::class) {
     // Optional Projection
     // If not provided, entire record is returned
     // All chosen field must be all pluses or all minuses
@@ -74,7 +74,7 @@ val query = Select(Post::class) {
 
 #### Count
 ```kotlin
-val query = Count(Post::class) {
+val query = Count(Post::class, Any::class) {
     where {
         Post::text eq "Hello"
     }
@@ -83,7 +83,7 @@ val query = Count(Post::class) {
 
 ### Update
 ```kotlin
-val query = Update(Post::class) {
+val query = Update(Post::class, Any::class) {
 
     // Set field value
     Post::text toValue "Update text"
@@ -121,7 +121,7 @@ val query = Update(Post::class) {
 
 ### Delete
 ```kotlin
-val query = Delete(Post::class) {
+val query = Delete(Post::class, Any::class) {
     // Deletes nothing by default
     
     // Conditional delete
@@ -136,11 +136,11 @@ val query = Delete(Post::class) {
 
 #### Short Forms
 ```kotlin
-val insert = kqlInsert<Post> {}
-val select = kqlSelect<Post> {}
-val count = kqlCount<Post> {}
-val update = kqlUpdate<Post> {}
-val delete = kqlDelete<Post> {}
+val insert = kqlInsert<Post, Any> {}
+val select = kqlSelect<Post, Any> {}
+val count = kqlCount<Post, Any> {}
+val update = kqlUpdate<Post, Any> {}
+val delete = kqlDelete<Post, Any> {}
 ```
 
 ## Where Clause Operators
