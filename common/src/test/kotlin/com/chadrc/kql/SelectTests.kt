@@ -3,6 +3,8 @@ package com.chadrc.kql
 import com.chadrc.kql.clauses.WhereClauseBuilder
 import com.chadrc.kql.exceptions.CannotSortSamePropertyTwice
 import com.chadrc.kql.exceptions.CannotSubtractAndAddFieldsException
+import com.chadrc.kql.exceptions.LeftPropOperandNotOnQueryClass
+import com.chadrc.kql.exceptions.RightPropOperandNotOnInputClass
 import com.chadrc.kql.models.Author
 import com.chadrc.kql.models.Post
 import com.chadrc.kql.statements.Select
@@ -203,5 +205,27 @@ class SelectTests {
         val two = conditions[1]
         assertTrue(one.value is KProperty<*>)
         assertTrue(two.value is KProperty<*>)
+    }
+
+    @Test
+    fun errorWhenUsingNonModelProperty() {
+        assertFailsWith<LeftPropOperandNotOnQueryClass> {
+            kqlSelect<Post, Any> {
+                where {
+                    Author::firstName eq "John"
+                }
+            }
+        }
+    }
+
+    @Test
+    fun errorWhenUsingNonInputProperty() {
+        assertFailsWith<RightPropOperandNotOnInputClass> {
+            kqlSelect<Post, SelectInput> {
+                where {
+                    Post::text eq Author::firstName
+                }
+            }
+        }
     }
 }
