@@ -4,10 +4,7 @@ import com.chadrc.kql.exceptions.LeftPropOperandNotOnQueryClass
 import com.chadrc.kql.exceptions.RightPropOperandNotOnInputClass
 import com.chadrc.kql.models.Author
 import com.chadrc.kql.models.Post
-import com.chadrc.kql.statements.MathOperation
-import com.chadrc.kql.statements.Operation
-import com.chadrc.kql.statements.Unset
-import com.chadrc.kql.statements.Update
+import com.chadrc.kql.statements.*
 import kotlin.reflect.KProperty
 import kotlin.test.*
 
@@ -194,7 +191,7 @@ class UpdateTests {
         assertTrue((change as MathOperation<*>).op == Operation.Remainder)
     }
 
-    class UpdateInput(val search: String, val minRank: Int)
+    class UpdateInput(val search: String, val minRank: Int, val text: String)
 
     @Test
     fun withWhereClauseInput() {
@@ -230,6 +227,34 @@ class UpdateTests {
                 where {
                     Post::text eq Author::firstName
                 }
+            }
+        }
+    }
+
+    @Test
+    fun withUpdateInput() {
+        val query = kqlUpdate<Post, UpdateInput> {
+            Post::text toValue UpdateInput::text
+        }
+
+        val assignment = query.changes[0] as Assignment<*>
+        assertTrue(assignment.value is KProperty<*>)
+    }
+
+    @Test
+    fun errorWhenUpdatingNonModelProperty() {
+        assertFailsWith<LeftPropOperandNotOnQueryClass> {
+            kqlUpdate<Post, UpdateInput> {
+                Author::firstName toValue "Name"
+            }
+        }
+    }
+
+    @Test
+    fun errorWhenUsingNonInputPropertyToUpdate() {
+        assertFailsWith<RightPropOperandNotOnInputClass> {
+            kqlUpdate<Post, UpdateInput> {
+                Post::text toValue Author::firstName
             }
         }
     }
