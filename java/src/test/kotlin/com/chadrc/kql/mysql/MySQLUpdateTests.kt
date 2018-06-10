@@ -24,4 +24,18 @@ class MySQLUpdateTests {
 
         assertEquals("UPDATE Post SET topic='Food',sticky=TRUE", query.queryString)
     }
+
+    @Test
+    fun updateWithConditions() {
+        val query = kqlMySQLUpdate<Post> {
+            it::topic toValue "Food"
+            it::sticky toValue true
+
+            where {
+                it::id eq 1
+            }
+        }
+
+        assertEquals("UPDATE Post SET topic='Food',sticky=TRUE WHERE (id=1)", query.queryString)
+    }
 }

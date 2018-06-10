@@ -23,7 +23,8 @@ class MySQLUpdate<T : Any>(private val kClass: KClass<T>, init: UpdateBuilder<T>
             }
 
             val allSets = setStrings.joinToString(",")
-            return "UPDATE $typeName SET $allSets"
+            val whereClause = makeWhereConditionString(update.conditions)
+            return "UPDATE $typeName SET $allSets$whereClause"
         }
 }
 

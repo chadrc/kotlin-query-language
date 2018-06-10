@@ -30,7 +30,7 @@ class UpdateTests {
             }
         }
 
-        assertEquals(1, query.conditions!!.size)
+        assertEquals(1, query.conditions.size)
     }
 
     @Test
