@@ -26,6 +26,7 @@ class MySQLInsert<T : Any>(private val kClass: KClass<T>, init: InsertBuilder<T>
                 propToValMaps.add(propToValMap)
             }
 
+            // Sort to ensure consistent order for all records
             propList.sort()
 
             val propString = propList.joinToString(",")
