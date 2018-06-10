@@ -1,5 +1,6 @@
 package mysql
 
+import kql.clauses.Direction
 import kql.clauses.WhereClauseBuilder
 import kql.statements.Select
 import kql.statements.SelectBuilder
@@ -22,17 +23,28 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
                 fieldSelection = fieldSelection.slice(0 until fieldSelection.length - 1)
             }
 
-            var whereClause = ""
-            if (select.conditions.isNotEmpty()) {
+            val whereClause = if (select.conditions.isNotEmpty()) {
                 val conditionList = ArrayList<String>()
                 for (condition in select.conditions) {
                     conditionList.add(makeConditionString(condition))
                 }
 
                 val conditionsStr = conditionList.joinToString(" AND ")
-                whereClause = " WHERE $conditionsStr"
-            }
-            return "SELECT $fieldSelection FROM ${kClass.simpleName}$whereClause"
+                " WHERE $conditionsStr"
+            } else ""
+
+            val sortClause = if (select.sorts.isNotEmpty()) {
+                val sortList = ArrayList<String>()
+                for (sort in select.sorts) {
+                    val dir = if (sort.dir == Direction.Ascending) "ASC" else "DESC"
+                    val propStr = sort.prop.name
+                    sortList.add("$propStr $dir")
+                }
+                val sortStr = sortList.joinToString(",")
+                " ORDER BY $sortStr"
+            } else ""
+
+            return "SELECT $fieldSelection FROM ${kClass.simpleName}$whereClause$sortClause"
         }
 
     private fun makeConditionString(condition: WhereClauseBuilder.Condition): String {

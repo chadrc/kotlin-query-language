@@ -227,4 +227,15 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post WHERE (((topic='Food') AND (ranking>=100)) OR ((authorId=10) AND (ranking>=50) AND ((topic='Technology') OR (topic='Music')))) AND (text LIKE 'Tutorial') AND (sticky=TRUE)", query.queryString)
     }
+
+    @Test
+    fun testSortAscending() {
+        val query = kqlMySQLSelect<Post> {
+            sort {
+                +it::authorId
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post ORDER BY authorId ASC", query.queryString)
+    }
 }
