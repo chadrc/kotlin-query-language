@@ -198,7 +198,7 @@ class UpdateTests {
 
     @Test
     fun withWhereClauseInput() {
-        val query = kqlDelete<Post, UpdateInput> {
+        val query = kqlUpdate<Post, UpdateInput> {
             where {
                 Post::text matches UpdateInput::search
                 Post::ranking gte UpdateInput::minRank
@@ -215,7 +215,7 @@ class UpdateTests {
     @Test
     fun errorWhenUsingNonModelProperty() {
         assertFailsWith<LeftPropOperandNotOnQueryClass> {
-            kqlDelete<Post, Any> {
+            kqlUpdate<Post, Any> {
                 where {
                     Author::firstName eq "John"
                 }
@@ -226,7 +226,7 @@ class UpdateTests {
     @Test
     fun errorWhenUsingNonInputProperty() {
         assertFailsWith<RightPropOperandNotOnInputClass> {
-            kqlDelete<Post, UpdateInput> {
+            kqlUpdate<Post, UpdateInput> {
                 where {
                     Post::text eq Author::firstName
                 }
