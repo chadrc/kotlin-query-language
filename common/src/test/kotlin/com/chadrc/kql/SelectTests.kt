@@ -6,14 +6,16 @@ import com.chadrc.kql.exceptions.CannotSubtractAndAddFieldsException
 import com.chadrc.kql.models.Author
 import com.chadrc.kql.models.Post
 import com.chadrc.kql.statements.Select
+import kotlin.reflect.KProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class SelectTests {
     @Test
     fun testSelectBuilder() {
-        val query = Select(Post::class) {
+        val query = Select(Post::class, Any::class) {
             fields {
                 +Post::id
                 +Post::text
@@ -25,7 +27,7 @@ class SelectTests {
 
     @Test
     fun testSelectBuilderHelper() {
-        val query = kqlSelect<Post> {
+        val query = kqlSelect<Post, Any> {
             fields {
                 +Post::id
             }
@@ -36,7 +38,7 @@ class SelectTests {
 
     @Test
     fun testMinusField() {
-        val query = kqlSelect<Post> {
+        val query = kqlSelect<Post, Any> {
             fields {
                 -Post::id
             }
@@ -48,7 +50,7 @@ class SelectTests {
     @Test
     fun testCannotSpecifyPlusAndMinusFields() {
         assertFailsWith<CannotSubtractAndAddFieldsException> {
-            Select(Post::class) {
+            Select(Post::class, Any::class) {
                 fields {
                     +Post::text
                     -Post::id
@@ -59,7 +61,7 @@ class SelectTests {
 
     @Test
     fun testSubObjectWithFields() {
-        val query = kqlSelect<Post> {
+        val query = kqlSelect<Post, Any> {
             fields {
                 Post::author withFields {
                     +Author::firstName
@@ -75,7 +77,7 @@ class SelectTests {
 
     @Test
     fun testWhereClause() {
-        val query = kqlSelect<Post> {
+        val query = kqlSelect<Post, Any> {
             where {
                 Post::id eq 0
             }
@@ -89,7 +91,7 @@ class SelectTests {
         val minDate = 1514764800000
         val maxDate = 1517270400000
 
-        val query = kqlSelect<Post> {
+        val query = kqlSelect<Post, Any> {
             where {
                 Post::id eq 0
                 Post::id ne 0
@@ -118,7 +120,7 @@ class SelectTests {
         val minDate = 1514764800000
         val maxDate = 1517270400000
 
-        val query = kqlSelect<Post> {
+        val query = kqlSelect<Post, Any> {
             where {
                 all {
                     Post::topic eq "Food"
@@ -145,7 +147,7 @@ class SelectTests {
 
     @Test
     fun testSortClause() {
-        val query = kqlSelect<Post> {
+        val query = kqlSelect<Post, Any> {
             sort {
                 +Post::published
                 -Post::author
@@ -158,7 +160,7 @@ class SelectTests {
     @Test
     fun testCannotSortSamePropTwice() {
         assertFailsWith<CannotSortSamePropertyTwice> {
-            kqlSelect<Post> {
+            kqlSelect<Post, Any> {
                 sort {
                     +Post::published
                     -Post::published
@@ -169,7 +171,7 @@ class SelectTests {
 
     @Test
     fun testLimit() {
-        val query = kqlSelect<Post> {
+        val query = kqlSelect<Post, Any> {
             limit(10)
         }
 
@@ -178,10 +180,28 @@ class SelectTests {
 
     @Test
     fun testOffset() {
-        val query = kqlSelect<Post> {
+        val query = kqlSelect<Post, Any> {
             offset(10)
         }
 
         assertEquals(query.offset, 10)
+    }
+
+    class SelectInput(val search: String, val minRank: Int)
+
+    @Test
+    fun selectWithInput() {
+        val query = kqlSelect<Post, SelectInput> {
+            where {
+                Post::text matches SelectInput::search
+                Post::ranking gte SelectInput::minRank
+            }
+        }
+
+        val conditions = query.conditions
+        val one = conditions[0]
+        val two = conditions[1]
+        assertTrue(one.value is KProperty<*>)
+        assertTrue(two.value is KProperty<*>)
     }
 }

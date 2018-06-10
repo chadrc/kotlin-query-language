@@ -5,9 +5,9 @@ import com.chadrc.kql.clauses.SortClauseBuilder
 import com.chadrc.kql.clauses.WhereClauseBuilder
 import kotlin.reflect.KClass
 
-class SelectBuilder<T : Any>(private val kClass: KClass<T>) {
+class SelectBuilder<T : Any, I : Any>(private val kClass: KClass<T>, private val inputClass: KClass<I>) {
     private var _fieldClauseBuilder: FieldClauseBuilder? = null
-    private var _whereClauseBuilder: WhereClauseBuilder<T>? = null
+    private var _whereClauseBuilder: WhereClauseBuilder<T, I>? = null
     private var _sortClauseBuilder: SortClauseBuilder? = null
     private var _limit: Int = -1
     private var _offset: Int = -1
@@ -23,8 +23,8 @@ class SelectBuilder<T : Any>(private val kClass: KClass<T>) {
         _fieldClauseBuilder?.init()
     }
 
-    fun where(init: WhereClauseBuilder<T>.() -> Unit) {
-        _whereClauseBuilder = WhereClauseBuilder(kClass)
+    fun where(init: WhereClauseBuilder<T, I>.() -> Unit) {
+        _whereClauseBuilder = WhereClauseBuilder(kClass, inputClass)
         _whereClauseBuilder?.init()
     }
 

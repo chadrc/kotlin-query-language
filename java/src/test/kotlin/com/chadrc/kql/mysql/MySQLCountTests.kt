@@ -8,14 +8,14 @@ class MySQLCountTests {
 
     @Test
     fun countAll() {
-        val query = kqlMySQLCount<Post> {}
+        val query = kqlMySQLCount<Post, Any> {}
 
         assertEquals("SELECT COUNT(*) FROM Post", query.queryString)
     }
 
     @Test
     fun countWithConditions() {
-        val query = kqlMySQLCount<Post> {
+        val query = kqlMySQLCount<Post, Any> {
             where {
                 Post::ranking gt 100
                 Post::topic eq "Food"

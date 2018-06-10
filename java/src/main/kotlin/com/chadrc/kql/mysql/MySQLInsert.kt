@@ -4,8 +4,8 @@ import com.chadrc.kql.statements.Insert
 import com.chadrc.kql.statements.InsertBuilder
 import kotlin.reflect.KClass
 
-class MySQLInsert<T : Any>(private val kClass: KClass<T>, init: InsertBuilder<T, Nothing>.() -> Unit) {
-    private val insert = Insert(kClass, Nothing::class, init)
+class MySQLInsert<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: KClass<I>, init: InsertBuilder<T, I>.() -> Unit) {
+    private val insert = Insert(kClass, inputClass, init)
 
     val queryString: String
         get() {
@@ -48,4 +48,4 @@ class MySQLInsert<T : Any>(private val kClass: KClass<T>, init: InsertBuilder<T,
         }
 }
 
-inline fun <reified T : Any> kqlMySQLInsert(noinline init: InsertBuilder<T, Nothing>.() -> Unit) = MySQLInsert(T::class, init)
+inline fun <reified T : Any, reified I : Any> kqlMySQLInsert(noinline init: InsertBuilder<T, I>.() -> Unit) = MySQLInsert(T::class, I::class, init)

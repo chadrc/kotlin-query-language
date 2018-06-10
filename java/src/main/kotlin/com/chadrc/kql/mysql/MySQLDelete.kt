@@ -4,8 +4,8 @@ import com.chadrc.kql.statements.Delete
 import com.chadrc.kql.statements.DeleteBuilder
 import kotlin.reflect.KClass
 
-class MySQLDelete<T : Any>(private val kClass: KClass<T>, init: DeleteBuilder<T>.() -> Unit) {
-    private val delete = Delete(kClass, init)
+class MySQLDelete<T : Any, I : Any>(private val kClass: KClass<T>, private val inputClass: KClass<I>, init: DeleteBuilder<T, I>.() -> Unit) {
+    private val delete = Delete(kClass, inputClass, init)
 
     val queryString: String
         get() {
@@ -19,4 +19,4 @@ class MySQLDelete<T : Any>(private val kClass: KClass<T>, init: DeleteBuilder<T>
         }
 }
 
-inline fun <reified T : Any> kqlMySQLDelete(noinline init: DeleteBuilder<T>.() -> Unit) = MySQLDelete(T::class, init)
+inline fun <reified T : Any, reified I : Any> kqlMySQLDelete(noinline init: DeleteBuilder<T, I>.() -> Unit) = MySQLDelete(T::class, I::class, init)

@@ -5,8 +5,8 @@ import com.chadrc.kql.statements.Select
 import com.chadrc.kql.statements.SelectBuilder
 import kotlin.reflect.KClass
 
-class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>.() -> Unit) {
-    private val select: Select<T> = Select(kClass, init)
+class MySQLSelect<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: KClass<I>, init: SelectBuilder<T, I>.() -> Unit) {
+    private val select: Select<T, I> = Select(kClass, inputClass, init)
 
     val queryString: String
         get() {
@@ -41,4 +41,4 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
         }
 }
 
-inline fun <reified T : Any> kqlMySQLSelect(noinline init: SelectBuilder<T>.() -> Unit) = MySQLSelect(T::class, init)
+inline fun <reified T : Any, reified I : Any> kqlMySQLSelect(noinline init: SelectBuilder<T, I>.() -> Unit) = MySQLSelect(T::class, I::class, init)

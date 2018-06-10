@@ -20,16 +20,16 @@ enum class Operation {
 
 class MathOperation<T : Number>(val prop: KProperty<T>, val op: Operation, val value: T) : Change
 
-class UpdateBuilder<T : Any>(private val kClass: KClass<T>) {
-    private var _whereClauseBuilder: WhereClauseBuilder<T>? = null
+class UpdateBuilder<T : Any, I : Any>(private val kClass: KClass<T>, private val inputClass: KClass<I>) {
+    private var _whereClauseBuilder: WhereClauseBuilder<T, I>? = null
 
     private val _changes = ArrayList<Change>()
 
     val conditions get() = _whereClauseBuilder?.conditions
     val changes get() = _changes
 
-    fun where(init: WhereClauseBuilder<T>.() -> Unit) {
-        _whereClauseBuilder = WhereClauseBuilder(kClass)
+    fun where(init: WhereClauseBuilder<T, I>.() -> Unit) {
+        _whereClauseBuilder = WhereClauseBuilder(kClass, inputClass)
         _whereClauseBuilder?.init()
     }
 

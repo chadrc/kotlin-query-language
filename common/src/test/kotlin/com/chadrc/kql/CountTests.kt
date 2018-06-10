@@ -9,7 +9,7 @@ class CountTests {
 
     @Test
     fun testCountBuilder() {
-        val query = Count(Post::class) {
+        val query = Count(Post::class, Any::class) {
             where {
                 Post::topic eq "Food"
             }
@@ -20,7 +20,7 @@ class CountTests {
 
     @Test
     fun testCountHelper() {
-        val query = kqlCount<Post> {
+        val query = kqlCount<Post, Any> {
             where {
                 Post::topic eq "Food"
             }

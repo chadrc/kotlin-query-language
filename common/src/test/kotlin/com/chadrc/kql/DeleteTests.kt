@@ -10,18 +10,18 @@ class DeleteTests {
 
     @Test
     fun testDeleteBuilder() {
-        Delete(Post::class) {}
+        Delete(Post::class, Any::class) {}
     }
 
     @Test
     fun testDeleteHelper() {
-        val query = kqlDelete<Post> {}
+        val query = kqlDelete<Post, Any> {}
         assertNotNull(query)
     }
 
     @Test
     fun testDeleteWhereClause() {
-        val query = kqlDelete<Post> {
+        val query = kqlDelete<Post, Any> {
             where {
                 Post::id eq 1
             }
@@ -32,7 +32,7 @@ class DeleteTests {
 
     @Test
     fun testDeleteAllFlag() {
-        val query = kqlDelete<Post> {
+        val query = kqlDelete<Post, Any> {
             all()
         }
 

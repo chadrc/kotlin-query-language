@@ -6,8 +6,8 @@ import com.chadrc.kql.clauses.WhereClauseBuilder
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-class Select<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>.() -> Unit) {
-    private val selectBuilder: SelectBuilder<T> = SelectBuilder(kClass)
+class Select<T : Any, I : Any>(private val kClass: KClass<T>, private val inputClass: KClass<I>, init: SelectBuilder<T, I>.() -> Unit) {
+    private val selectBuilder: SelectBuilder<T, I> = SelectBuilder(kClass, inputClass)
 
     class Field(val prop: KProperty<*>, val subFields: List<Field>? = null)
 

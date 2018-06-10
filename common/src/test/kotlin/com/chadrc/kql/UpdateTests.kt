@@ -14,18 +14,18 @@ class UpdateTests {
 
     @Test
     fun testUpdateBuilder() {
-        Update(Post::class) {}
+        Update(Post::class, Any::class) {}
     }
 
     @Test
     fun testUpdateHelper() {
-        val query = kqlUpdate<Post> {}
+        val query = kqlUpdate<Post, Any> {}
         assertNotNull(query)
     }
 
     @Test
     fun testUpdateWhereClause() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             where {
                 Post::id eq 1
             }
@@ -36,7 +36,7 @@ class UpdateTests {
 
     @Test
     fun testToValue() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::text toValue "Updated Text"
         }
 
@@ -45,7 +45,7 @@ class UpdateTests {
 
     @Test
     fun testUnsetUnary() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             -Post::author
         }
 
@@ -55,7 +55,7 @@ class UpdateTests {
 
     @Test
     fun testUnsetFunctionSyntax() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             unset(Post::author)
         }
 
@@ -65,7 +65,7 @@ class UpdateTests {
 
     @Test
     fun testIncKeyword() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::ranking add 2
         }
 
@@ -78,7 +78,7 @@ class UpdateTests {
 
     @Test
     fun testIncAssignment() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::ranking += 2
         }
 
@@ -91,7 +91,7 @@ class UpdateTests {
 
     @Test
     fun testDecKeyword() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::ranking sub 2
         }
 
@@ -104,7 +104,7 @@ class UpdateTests {
 
     @Test
     fun testDecAssignment() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::ranking -= 2
         }
 
@@ -117,7 +117,7 @@ class UpdateTests {
 
     @Test
     fun testMulKeyword() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::ranking mul 2
         }
 
@@ -130,7 +130,7 @@ class UpdateTests {
 
     @Test
     fun testMulAssignment() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::ranking *= 2
         }
 
@@ -143,7 +143,7 @@ class UpdateTests {
 
     @Test
     fun testDivKeyword() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::ranking div 2
         }
 
@@ -156,7 +156,7 @@ class UpdateTests {
 
     @Test
     fun testDivAssignment() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::ranking /= 2
         }
 
@@ -169,7 +169,7 @@ class UpdateTests {
 
     @Test
     fun testRemKeyword() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::ranking rem 2
         }
 
@@ -182,7 +182,7 @@ class UpdateTests {
 
     @Test
     fun testRemAssignment() {
-        val query = kqlUpdate<Post> {
+        val query = kqlUpdate<Post, Any> {
             Post::ranking %= 2
         }
 
