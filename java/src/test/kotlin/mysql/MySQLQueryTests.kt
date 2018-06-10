@@ -238,4 +238,27 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post ORDER BY authorId ASC", query.queryString)
     }
+
+    @Test
+    fun testSortDescending() {
+        val query = kqlMySQLSelect<Post> {
+            sort {
+                -it::authorId
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post ORDER BY authorId DESC", query.queryString)
+    }
+
+    @Test
+    fun testMultipleSorts() {
+        val query = kqlMySQLSelect<Post> {
+            sort {
+                -it::authorId
+                +it::ranking
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post ORDER BY authorId DESC,ranking ASC", query.queryString)
+    }
 }
