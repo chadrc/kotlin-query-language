@@ -9,6 +9,10 @@ class MySQLDelete<T : Any>(private val kClass: KClass<T>, init: DeleteBuilder<T>
 
     val queryString: String
         get() {
+            if (delete.conditions.isEmpty()
+                    && !delete.deleteAll) {
+                return ""
+            }
             val typeName = kClass.simpleName
             val whereClause = makeWhereConditionString(delete.conditions)
             return "DELETE FROM $typeName$whereClause"

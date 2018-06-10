@@ -24,4 +24,11 @@ class MySQLDeleteTests {
 
         assertEquals("DELETE FROM Post", query.queryString)
     }
+
+    @Test
+    fun blankWithNoWhereOrAll() {
+        val query = kqlMySQLDelete<Post> { }
+
+        assertEquals("", query.queryString)
+    }
 }
