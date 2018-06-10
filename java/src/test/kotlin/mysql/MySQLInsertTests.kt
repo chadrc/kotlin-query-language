@@ -1,0 +1,4 @@
+package mysql
+
+class MySQLInsertTests {
+}
