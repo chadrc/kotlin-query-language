@@ -15,4 +15,13 @@ class MySQLDeleteTests {
 
         assertEquals("DELETE FROM Post WHERE (id=1)", query.queryString)
     }
+
+    @Test
+    fun deleteAll() {
+        val query = kqlMySQLDelete<Post> {
+            all()
+        }
+
+        assertEquals("DELETE FROM Post", query.queryString)
+    }
 }
