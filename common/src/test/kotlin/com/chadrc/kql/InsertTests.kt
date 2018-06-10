@@ -64,4 +64,15 @@ class InsertTests {
         val firstValuePair = firstRecord.valuePairs[0]
         assertTrue(firstValuePair.value is KProperty<*>)
     }
+
+    @Test
+    fun errorWhenUsingPropNotOnClassWithInput() {
+        assertFailsWith<LeftPropOperandNotOnQueryClass> {
+            kqlInsert<Post, Any> {
+                values {
+                    Author::firstName eq PostTextInput::text
+                }
+            }
+        }
+    }
 }

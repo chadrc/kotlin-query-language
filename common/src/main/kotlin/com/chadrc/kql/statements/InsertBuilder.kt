@@ -12,12 +12,17 @@ class ValuesBuilder(private val kClass: KClass<*>, private val inputClass: KClas
     val valuePairs get() = _valuePairs.toList()
 
     infix fun <T> KProperty<T>.eq(value: T) {
-        if (!kClass.members.contains(this)) throw LeftPropOperandNotOnQueryClass(this, kClass)
+        assertOnClass(this)
         _valuePairs.add(ValuePair(this, value))
     }
 
     infix fun <T> KProperty<T>.eq(prop: KProperty<T>) {
+        assertOnClass(this)
         _valuePairs.add(ValuePair(this, prop))
+    }
+
+    private fun assertOnClass(prop: KProperty<*>) {
+        if (!kClass.members.contains(prop)) throw LeftPropOperandNotOnQueryClass(prop, kClass)
     }
 }
 
