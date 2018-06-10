@@ -13,17 +13,26 @@ class Post(
 
 ### Create
 ```kotlin
-val query = Insert(Post::class) {
+class InsertInput(
+    val text: String
+)
+
+val query = Insert(Post::class, InsertInput::class) {
     // At least one required
     values {
-        it::text eq "Some Content"
-        it::topic eq "Food"
+        Post::text eq "Some Content"
+        Post::topic eq "Food"
     }
     
     // Insert more than one
     values {
-        it::text eq "More Content"
-        it::topic eq "Technology"
+        Post::text eq "More Content"
+        Post::topic eq "Technology"
+    }
+    
+    // Insert with input value
+    values {
+        Post::text eq InsertInput::text
     }
 }
 ```
@@ -36,23 +45,23 @@ val query = Select(Post::class) {
     // All chosen field must be all pluses or all minuses
     fields {
         // Pluses return only those fields
-        +it::text
+        +Post::text
         
         // Minuses return every other field
-        -it::text
+        -Post::text
     }
     
     // Optional conditions
     // If not provided all records are returned
     where {
-        it::id eq 1
+        Post::id eq 1
     }
     
     // Optional sorting
     // Only one plus/minus per field
     sort {
-        +it::id // Ascending
-        -it::text // Descending
+        +Post::id // Ascending
+        -Post::text // Descending
     }
     
     // Optional max number to return
@@ -67,7 +76,7 @@ val query = Select(Post::class) {
 ```kotlin
 val query = Count(Post::class) {
     where {
-        it::text eq "Hello"
+        Post::text eq "Hello"
     }
 }
 ```
@@ -77,35 +86,35 @@ val query = Count(Post::class) {
 val query = Update(Post::class) {
 
     // Set field value
-    it::text toValue "Update text"
+    Post::text toValue "Update text"
 
     // Special value, to be interpreted by DB
-    it::publish toValue kqlCurrentDate
+    Post::publish toValue kqlCurrentDate
 
     // Unset value
-    -it::topic
-    unset(it::topic)
+    -Post::topic
+    unset(Post::topic)
 
     // 2 ways to do relative math operations values
-    it::views add 2
-    it::views += 2
+    Post::views add 2
+    Post::views += 2
 
-    it::views sub 2
-    it::views -= 2
+    Post::views sub 2
+    Post::views -= 2
 
-    it::ranking mul 2
-    it::ranking *= 2
+    Post::ranking mul 2
+    Post::ranking *= 2
 
-    it::ranking div 2
-    it::ranking /= 2
+    Post::ranking div 2
+    Post::ranking /= 2
 
-    it::ranking rem 2
-    it::ranking %= 2
+    Post::ranking rem 2
+    Post::ranking %= 2
     
     // Update only records that pass conditions
     // Update all records, if not provided
     where {
-        it::id eq 1
+        Post::id eq 1
     }
 }
 ```
@@ -117,7 +126,7 @@ val query = Delete(Post::class) {
     
     // Conditional delete
     where {
-        it::id eq 1
+        Post::id eq 1
     }
     
     // Delete all
@@ -143,19 +152,19 @@ val jan30 = Date("Jan 30 2018")
 ```kotlin
 val select = kqlSelect<Post> {
     where {
-        it::id eq 1
-        it::topic ne "Technology"
-        it::published gt jan1
-        it::published gte jan1
-        it::published lt jan30
-        it::published lte jan30
-        it::published within jan1..jan30
-        it::published notWithin jan1..jan30
-        it::topic within listOf("Food", "Photography", "Music")
-        it::topic notWithin listOf("Food", "Photography", "Music")
+        Post::id eq 1
+        Post::topic ne "Technology"
+        Post::published gt jan1
+        Post::published gte jan1
+        Post::published lt jan30
+        Post::published lte jan30
+        Post::published within jan1..jan30
+        Post::published notWithin jan1..jan30
+        Post::topic within listOf("Food", "Photography", "Music")
+        Post::topic notWithin listOf("Food", "Photography", "Music")
         
         // Pattern matching, format will depend on implementation
-        it::text matches "T.*"
+        Post::text matches "T.*"
     }
 }
 ```
@@ -165,8 +174,8 @@ Logical AND, all conditions in block must be true.
 val select = kqlSelect<Post> {
     where {
         all {
-            it::topic ne "Technology"
-            it::published within jan1..jan30
+            Post::topic ne "Technology"
+            Post::published within jan1..jan30
         }
     }
 }
@@ -176,8 +185,8 @@ Logical OR, only one condition in block must be true.
 val select = kqlSelect<Post> {
     where {
         any {
-            it::topic eq "Technology"
-            it::published eq jan30
+            Post::topic eq "Technology"
+            Post::published eq jan30
         }
     }
 }
@@ -189,7 +198,7 @@ Logical NOT, negates conditions on block.
 val select = kqlSelect<Post> {
     where {
         not {
-            it::published within jan1..jan30 
+            Post::published within jan1..jan30 
         }
     }
 }
@@ -200,10 +209,10 @@ Find all posts published between Jan 1 and Jan 30, and have either Technology or
 val select = kqlSelect<Post> {
     where {
         all {
-            it::published within jan1..jan30
+            Post::published within jan1..jan30
             any {
-                it::topic eq "Technology"
-                it::topic eq "Food"
+                Post::topic eq "Technology"
+                Post::topic eq "Food"
             }
         }
     }
@@ -214,10 +223,10 @@ Selecting fields on a sub-object in same document/record
 ```kotlin
 val select = kqlSelect<Post> {
     fields {
-        it::author // Selects all fields on author
-        it::author withFields {
-            it::firstName
-            it::lastName
+        Post::author // Selects all fields on author
+        Post::author withFields {
+            Post::firstName
+            Post::lastName
         }
     }
 }
