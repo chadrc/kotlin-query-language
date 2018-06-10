@@ -11,11 +11,11 @@ class InsertTests {
     fun testBuildInsertQuery() {
         val query = Insert(Post::class, Nothing::class) {
             values {
-                it::text eq "First Post"
+                Post::text eq "First Post"
             }
 
             values {
-                it::text eq "Second Post"
+                Post::text eq "Second Post"
             }
         }
 
@@ -26,11 +26,11 @@ class InsertTests {
     fun testInsertHelper() {
         val query = kqlInsert<Post, Any> {
             values {
-                it::text eq "First Post"
+                Post::text eq "First Post"
             }
 
             values {
-                it::text eq "Second Post"
+                Post::text eq "Second Post"
             }
         }
 
@@ -43,7 +43,7 @@ class InsertTests {
     fun testInput() {
         val query = kqlInsert<Post, PostTextInput> {
             values {
-                it::text eq PostTextInput::text
+                Post::text eq PostTextInput::text
             }
         }
 

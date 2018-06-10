@@ -10,8 +10,8 @@ class MySQLInsertTests {
     fun singleInsert() {
         val query = kqlMySQLInsert<Post> {
             values {
-                it::text eq "Some Content"
-                it::topic eq "Food"
+                Post::text eq "Some Content"
+                Post::topic eq "Food"
             }
         }
 
@@ -22,13 +22,13 @@ class MySQLInsertTests {
     fun multiInsert() {
         val query = kqlMySQLInsert<Post> {
             values {
-                it::text eq "Some Content"
-                it::topic eq "Food"
+                Post::text eq "Some Content"
+                Post::topic eq "Food"
             }
 
             values {
-                it::text eq "More Content"
-                it::topic eq "Technology"
+                Post::text eq "More Content"
+                Post::topic eq "Technology"
             }
         }
 
@@ -39,14 +39,14 @@ class MySQLInsertTests {
     fun insertWithDifferentValues() {
         val query = kqlMySQLInsert<Post> {
             values {
-                it::text eq "Some Content"
-                it::ranking eq 100
+                Post::text eq "Some Content"
+                Post::ranking eq 100
             }
 
             values {
-                it::text eq "More Content"
-                it::topic eq "Food"
-                it::sticky eq true
+                Post::text eq "More Content"
+                Post::topic eq "Food"
+                Post::sticky eq true
             }
         }
 

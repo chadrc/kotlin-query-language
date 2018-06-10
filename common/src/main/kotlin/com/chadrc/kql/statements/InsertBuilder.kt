@@ -1,6 +1,5 @@
 package com.chadrc.kql.statements
 
-import com.chadrc.kql.utils.stubInstanceAction
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -25,9 +24,9 @@ class InsertBuilder<T : Any, I : Any>(private val kClass: KClass<T>, private val
 
     val records get() = _records
 
-    fun values(init: ValuesBuilder.(it: T) -> Unit) {
+    fun values(init: ValuesBuilder.() -> Unit) {
         val record = ValuesBuilder()
-        kClass.stubInstanceAction { record.init(it) }
+        record.init()
         _records.add(record)
     }
 }
