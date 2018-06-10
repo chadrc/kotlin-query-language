@@ -38,4 +38,20 @@ class MySQLUpdateTests {
 
         assertEquals("UPDATE Post SET topic='Food',sticky=TRUE WHERE (id=1)", query.queryString)
     }
+
+    @Test
+    fun unsetUpdate() {
+        val unary = kqlMySQLUpdate<Post> {
+            -it::topic
+        }
+
+        val keyword = kqlMySQLUpdate<Post> {
+            unset(it::topic)
+        }
+
+        val expected = "UPDATE Post SET topic=NULL"
+
+        assertEquals(expected, unary.queryString)
+        assertEquals(expected, keyword.queryString)
+    }
 }
