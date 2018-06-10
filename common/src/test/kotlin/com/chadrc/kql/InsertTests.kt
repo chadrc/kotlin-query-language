@@ -2,6 +2,8 @@ package com.chadrc.kql
 
 import com.chadrc.kql.exceptions.LeftPropOperandNotOnQueryClass
 import com.chadrc.kql.exceptions.RightPropOperandNotOnInputClass
+import com.chadrc.kql.models.Author
+import com.chadrc.kql.models.Post
 import com.chadrc.kql.statements.Insert
 import kotlin.reflect.KProperty
 import kotlin.test.Test

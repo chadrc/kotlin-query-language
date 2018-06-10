@@ -4,6 +4,8 @@ import com.chadrc.kql.clauses.WhereClauseBuilder
 import com.chadrc.kql.exceptions.CannotSortSamePropertyTwice
 import com.chadrc.kql.exceptions.CannotSubtractAndAddFieldsException
 import com.chadrc.kql.exceptions.NoStubConstructorException
+import com.chadrc.kql.models.NoStubModel
+import com.chadrc.kql.models.Post
 import com.chadrc.kql.statements.Select
 import kotlin.test.Test
 import kotlin.test.assertEquals

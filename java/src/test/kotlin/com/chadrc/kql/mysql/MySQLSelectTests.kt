@@ -1,6 +1,6 @@
 package com.chadrc.kql.mysql
 
-import com.chadrc.kql.Post
+import com.chadrc.kql.models.Post
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

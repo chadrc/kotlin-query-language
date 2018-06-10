@@ -1,5 +1,6 @@
 package com.chadrc.kql
 
+import com.chadrc.kql.models.Post
 import com.chadrc.kql.statements.Count
 import kotlin.test.Test
 import kotlin.test.assertEquals

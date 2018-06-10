@@ -1,4 +1,4 @@
-package com.chadrc.kql
+package com.chadrc.kql.models
 
 class Post(
         val id: Int = -1,

@@ -1,5 +1,6 @@
 package com.chadrc.kql
 
+import com.chadrc.kql.models.Post
 import com.chadrc.kql.statements.MathOperation
 import com.chadrc.kql.statements.Operation
 import com.chadrc.kql.statements.Unset
