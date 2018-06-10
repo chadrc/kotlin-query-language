@@ -3,9 +3,11 @@ package com.chadrc.kql.mysql
 import com.chadrc.kql.statements.Insert
 import com.chadrc.kql.statements.InsertBuilder
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
 class MySQLInsert<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: KClass<I>, init: InsertBuilder<T, I>.() -> Unit) {
     private val insert = Insert(kClass, inputClass, init)
+    private val _params = ArrayList<KProperty<*>>()
 
     val queryString: String
         get() {
@@ -37,6 +39,9 @@ class MySQLInsert<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: K
                 for (prop in propList) {
                     val value = if (map.containsKey(prop)) map[prop] else null
                     values.add(valueToMySQL(value))
+                    if (value is KProperty<*>) {
+                        params.add(value)
+                    }
                 }
                 val valueString = values.joinToString(",")
                 valueStrings.add("($valueString)")
@@ -46,6 +51,8 @@ class MySQLInsert<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: K
 
             return "INSERT INTO $typeName($propString) VALUES$allValues"
         }
+
+    val params get() = _params
 }
 
 inline fun <reified T : Any, reified I : Any> kqlMySQLInsert(noinline init: InsertBuilder<T, I>.() -> Unit) = MySQLInsert(T::class, I::class, init)

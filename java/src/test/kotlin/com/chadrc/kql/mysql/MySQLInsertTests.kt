@@ -52,4 +52,20 @@ class MySQLInsertTests {
 
         assertEquals("INSERT INTO Post(ranking,sticky,text,topic) VALUES(100,NULL,'Some Content',NULL),(NULL,TRUE,'More Content','Food')", query.queryString)
     }
+
+    class InsertInput(val text: String, val ranking: Int)
+
+    @Test
+    fun insertWithInput() {
+        val query = kqlMySQLInsert<Post, InsertInput> {
+            values {
+                Post::text eq InsertInput::text
+                Post::ranking eq InsertInput::ranking
+            }
+        }
+
+        assertEquals("INSERT INTO Post(ranking,text) VALUES(?,?)", query.queryString)
+        assertEquals(query.params[0], InsertInput::ranking)
+        assertEquals(query.params[1], InsertInput::text)
+    }
 }

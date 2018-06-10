@@ -1,6 +1,7 @@
 package com.chadrc.kql.mysql
 
 import com.chadrc.kql.clauses.WhereClauseBuilder
+import kotlin.reflect.KProperty
 
 fun valueToMySQL(value: Any?): String {
     if (value == null) {
@@ -13,6 +14,7 @@ fun valueToMySQL(value: Any?): String {
         is String -> "'$value'"
         is Number -> value.toString()
         is Boolean -> if (value == true) "TRUE" else "FALSE"
+        is KProperty<*> -> "?"
 
         else -> value.toString()
     }
