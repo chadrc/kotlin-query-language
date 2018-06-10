@@ -21,17 +21,6 @@ class InsertTests {
         assertEquals(2, query.records.size)
     }
 
-//    @Test
-//    fun testInsertWithList() {
-//        val query = Insert<Post> {
-//            +List(10) {
-//                Post(text = "Post $it")
-//            }
-//        }
-//
-//        assertEquals(10, query.records.size)
-//    }
-
     @Test
     fun testInsertHelper() {
         val query = kqlInsert<Post> {
