@@ -6,8 +6,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class PostTextInput(val text: String)
-
 class InsertTests {
     @Test
     fun testBuildInsertQuery() {
@@ -38,6 +36,8 @@ class InsertTests {
 
         assertEquals(2, query.records.size)
     }
+
+    class PostTextInput(val text: String)
 
     @Test
     fun testInput() {
