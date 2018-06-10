@@ -261,4 +261,13 @@ class MySQLQueryTests {
 
         assertEquals("SELECT $allPostFields FROM Post ORDER BY authorId DESC,ranking ASC", query.queryString)
     }
+
+    @Test
+    fun testLimit() {
+        val query = kqlMySQLSelect<Post> {
+            limit(15)
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post LIMIT 15", query.queryString)
+    }
 }
