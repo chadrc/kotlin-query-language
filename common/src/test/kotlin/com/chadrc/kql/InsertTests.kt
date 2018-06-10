@@ -1,9 +1,11 @@
 package com.chadrc.kql
 
+import com.chadrc.kql.exceptions.LeftPropOperandNotOnQueryClass
 import com.chadrc.kql.statements.Insert
 import kotlin.reflect.KProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class InsertTests {
@@ -35,6 +37,17 @@ class InsertTests {
         }
 
         assertEquals(2, query.records.size)
+    }
+
+    @Test
+    fun errorWhenUsingPropNotOnClass() {
+        assertFailsWith<LeftPropOperandNotOnQueryClass> {
+            kqlInsert<Post, Any> {
+                values {
+                    Author::firstName eq "John"
+                }
+            }
+        }
     }
 
     class PostTextInput(val text: String)
