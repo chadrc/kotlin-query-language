@@ -54,4 +54,20 @@ class MySQLUpdateTests {
         assertEquals(expected, unary.queryString)
         assertEquals(expected, keyword.queryString)
     }
+
+    @Test
+    fun addOperation() {
+        val operator = kqlMySQLUpdate<Post> {
+            it::ranking += 10
+        }
+
+        val keyword = kqlMySQLUpdate<Post> {
+            it::ranking add 10
+        }
+
+        val expected = "UPDATE Post SET ranking=(ranking+10)"
+
+        assertEquals(expected, operator.queryString)
+        assertEquals(expected, keyword.queryString)
+    }
 }

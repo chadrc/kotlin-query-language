@@ -1,9 +1,6 @@
 package com.chadrc.kql.mysql
 
-import com.chadrc.kql.statements.Assignment
-import com.chadrc.kql.statements.Unset
-import com.chadrc.kql.statements.Update
-import com.chadrc.kql.statements.UpdateBuilder
+import com.chadrc.kql.statements.*
 import kotlin.reflect.KClass
 
 class MySQLUpdate<T : Any>(private val kClass: KClass<T>, init: UpdateBuilder<T>.(T) -> Unit) {
@@ -17,6 +14,7 @@ class MySQLUpdate<T : Any>(private val kClass: KClass<T>, init: UpdateBuilder<T>
                 val str = when (change) {
                     is Assignment<*> -> "${change.prop.name}=${valueToMySQL(change.value)}"
                     is Unset<*> -> "${change.prop.name}=NULL"
+                    is MathOperation<*> -> makeMathOperation(change)
 
                     else -> throw Error("Unsupported change type ${change::class.simpleName}")
                 }
@@ -28,6 +26,17 @@ class MySQLUpdate<T : Any>(private val kClass: KClass<T>, init: UpdateBuilder<T>
             val whereClause = makeWhereConditionString(update.conditions)
             return "UPDATE $typeName SET $allSets$whereClause"
         }
+
+    private fun makeMathOperation(operation: MathOperation<*>): String {
+        val propName = operation.prop.name
+        val mathStr = when (operation.op) {
+            Operation.Increment -> "$propName+${valueToMySQL(operation.value)}"
+
+            else -> throw Error("Unsupported math operation ${operation.op}")
+        }
+
+        return "$propName=($mathStr)"
+    }
 }
 
 inline fun <reified T : Any> kqlMySQLUpdate(noinline init: UpdateBuilder<T>.(T) -> Unit) = MySQLUpdate(T::class, init)
