@@ -9,6 +9,8 @@ class ValuePair<T>(val prop: KProperty<T>, val value: T)
 class ValuesBuilder {
     private val _valuePairs = ArrayList<ValuePair<*>>()
 
+    val valuePairs get() = _valuePairs.toList()
+
     infix fun <T> KProperty<T>.eq(value: T) {
         _valuePairs.add(ValuePair(this, value))
     }

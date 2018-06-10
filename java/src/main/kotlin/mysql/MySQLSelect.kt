@@ -107,18 +107,6 @@ class MySQLSelect<T : Any>(private val kClass: KClass<T>, init: SelectBuilder<T>
         // Wrap in parenthesis to isolate from other statements
         return "($conditionStr)"
     }
-
-    private fun valueToMySQL(value: Any): String {
-        // Wrap strings in single quotes for SQL
-        // otherwise use raw value
-        return when (value) {
-            is String -> "'$value'"
-            is Number -> value.toString()
-            is Boolean -> if (value == true) "TRUE" else "FALSE"
-
-            else -> value.toString()
-        }
-    }
 }
 
 inline fun <reified T : Any> kqlMySQLSelect(noinline init: SelectBuilder<T>.() -> Unit) = MySQLSelect(T::class, init)
