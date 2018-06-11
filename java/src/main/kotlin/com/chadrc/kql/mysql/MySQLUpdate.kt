@@ -7,27 +7,29 @@ import kotlin.reflect.KProperty
 class MySQLUpdate<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: KClass<I>, init: UpdateBuilder<T, I>.() -> Unit) {
     private val update = Update(kClass, inputClass, init)
     private val _params = ArrayList<KProperty<*>>()
+    private val _queryString: String
 
-    val queryString: String
-        get() {
-            val typeName = kClass.simpleName
-            val setStrings = ArrayList<String>()
-            for (change in update.changes) {
-                val str = when (change) {
-                    is Assignment<*> -> "${change.prop.name}=${valueToMySQL(change.value)}"
-                    is Unset<*> -> "${change.prop.name}=NULL"
-                    is MathOperation<*> -> makeMathOperation(change)
+    init {
+        val typeName = kClass.simpleName
+        val setStrings = ArrayList<String>()
+        for (change in update.changes) {
+            val str = when (change) {
+                is Assignment<*> -> "${change.prop.name}=${valueToMySQL(change.value)}"
+                is Unset<*> -> "${change.prop.name}=NULL"
+                is MathOperation<*> -> makeMathOperation(change)
 
-                    else -> throw Error("Unsupported change type ${change::class.simpleName}")
-                }
-
-                setStrings.add(str)
+                else -> throw Error("Unsupported change type ${change::class.simpleName}")
             }
 
-            val allSets = setStrings.joinToString(",")
-            val whereClause = makeWhereConditionString(update.conditions, _params)
-            return "UPDATE $typeName SET $allSets$whereClause"
+            setStrings.add(str)
         }
+
+        val allSets = setStrings.joinToString(",")
+        val whereClause = makeWhereConditionString(update.conditions, _params)
+        _queryString = "UPDATE $typeName SET $allSets$whereClause"
+    }
+
+    val queryString get() = _queryString
 
     private fun makeMathOperation(operation: MathOperation<*>): String {
         val propName = operation.prop.name
