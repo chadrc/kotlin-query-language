@@ -1,6 +1,7 @@
 package com.chadrc.kql.mysql
 
 import com.chadrc.kql.clauses.WhereClauseBuilder
+import java.sql.PreparedStatement
 import kotlin.reflect.KProperty
 
 fun valueToMySQL(value: Any?): String {
@@ -96,4 +97,15 @@ private fun makeConditionString(condition: WhereClauseBuilder.Condition, params:
 
     // Wrap in parenthesis to isolate from other statements
     return "($conditionStr)"
+}
+
+fun PreparedStatement.setAny(index: Int, a: Any?) {
+    when (a) {
+        is String -> this.setString(index, a)
+        is Int -> this.setInt(index, a)
+        is Float -> this.setFloat(index, a)
+        is Long -> this.setLong(index, a)
+        is Double -> this.setDouble(index, a)
+        is Boolean -> this.setBoolean(index, a)
+    }
 }
