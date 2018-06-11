@@ -2,9 +2,11 @@ package com.chadrc.kql.mysql
 
 import com.chadrc.kql.statements.*
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
 class MySQLUpdate<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: KClass<I>, init: UpdateBuilder<T, I>.() -> Unit) {
     private val update = Update(kClass, inputClass, init)
+    private val _params = ArrayList<KProperty<*>>()
 
     val queryString: String
         get() {
@@ -23,7 +25,7 @@ class MySQLUpdate<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: K
             }
 
             val allSets = setStrings.joinToString(",")
-            val whereClause = makeWhereConditionString(update.conditions)
+            val whereClause = makeWhereConditionString(update.conditions, _params)
             return "UPDATE $typeName SET $allSets$whereClause"
         }
 

@@ -279,4 +279,24 @@ class MySQLSelectTests {
 
         assertEquals("SELECT $allPostFields FROM Post OFFSET 15", query.queryString)
     }
+
+    class SelectInput(val search: String, val minRanking: Int)
+
+    @Test
+    fun selectWithInput() {
+        val query = kqlMySQLSelect<Post, SelectInput> {
+            where {
+                Post::ranking gte SelectInput::minRanking
+                any {
+                    Post::text matches SelectInput::search
+                    Post::topic matches SelectInput::search
+                }
+            }
+        }
+
+        assertEquals("SELECT $allPostFields FROM Post WHERE (ranking>=?) AND ((text LIKE ?) OR (topic LIKE ?))", query.queryString)
+        assertEquals(query.params[0], SelectInput::minRanking)
+        assertEquals(query.params[1], SelectInput::search)
+        assertEquals(query.params[2], SelectInput::search)
+    }
 }

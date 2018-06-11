@@ -40,7 +40,7 @@ class MySQLInsert<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: K
                     val value = if (map.containsKey(prop)) map[prop] else null
                     values.add(valueToMySQL(value))
                     if (value is KProperty<*>) {
-                        params.add(value)
+                        _params.add(value)
                     }
                 }
                 val valueString = values.joinToString(",")
@@ -52,7 +52,7 @@ class MySQLInsert<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: K
             return "INSERT INTO $typeName($propString) VALUES$allValues"
         }
 
-    val params get() = _params
+    val params get() = _params.toList()
 }
 
 inline fun <reified T : Any, reified I : Any> kqlMySQLInsert(noinline init: InsertBuilder<T, I>.() -> Unit) = MySQLInsert(T::class, I::class, init)
