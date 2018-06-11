@@ -1,11 +1,12 @@
 package com.chadrc.kql.mysql
 
+import com.chadrc.kql.mysql.executor.MySQLPreparable
 import com.chadrc.kql.statements.Insert
 import com.chadrc.kql.statements.InsertBuilder
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-class MySQLInsert<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: KClass<I>, init: InsertBuilder<T, I>.() -> Unit) {
+class MySQLInsert<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: KClass<I>, init: InsertBuilder<T, I>.() -> Unit) : MySQLPreparable {
     private val insert = Insert(kClass, inputClass, init)
     private val _params = ArrayList<KProperty<*>>()
     private val _queryString: String
@@ -52,8 +53,8 @@ class MySQLInsert<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: K
         _queryString = "INSERT INTO $typeName($propString) VALUES$allValues"
     }
 
-    val queryString get() = _queryString
-    val params get() = _params.toList()
+    override val queryString get() = _queryString
+    override val params get() = _params.toList()
 }
 
 inline fun <reified T : Any, reified I : Any> kqlMySQLInsert(noinline init: InsertBuilder<T, I>.() -> Unit) = MySQLInsert(T::class, I::class, init)

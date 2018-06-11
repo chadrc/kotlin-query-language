@@ -1,34 +1,37 @@
 package com.chadrc.kql.mysql
 
 import com.chadrc.kql.models.Post
+import com.chadrc.kql.mysql.executor.MySQLKQLExecutor
 import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.ResultSet
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
 class ExecutorTests {
-    private var conn: Connection? = null
+    private var executor: MySQLKQLExecutor<Post>? = null
+
+    init {
+        Class.forName("com.mysql.cj.jdbc.Driver").newInstance()
+    }
 
     @BeforeTest
     fun before() {
-        Class.forName("com.mysql.cj.jdbc.Driver").newInstance()
-        conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/test?user=root&password=password"
-        )
+        executor = MySQLKQLExecutor(Post::class)
     }
 
     @AfterTest
     fun after() {
-        val deleteAllStatement = conn?.createStatement()
+        val deleteAllStatement = executor?.conn?.createStatement()
         deleteAllStatement?.execute("DELETE FROM Post")
-        conn?.close()
+        executor?.conn?.close()
     }
 
     @Test
     fun insert() {
-        val query = kqlMySQLInsert<Post, Any> {
+        executor?.insert {
             values {
                 Post::authorId eq 0
                 Post::text eq "Content"
@@ -39,12 +42,7 @@ class ExecutorTests {
             }
         }
 
-        val kqlStatement = conn?.createStatement()
-        kqlStatement?.execute(query.queryString)
-
-        val statement = conn?.createStatement()
-        val resultSet = statement?.executeQuery("SELECT * FROM Post")
-        resultSet?.next()
+        val resultSet = selectAllPosts()
         assertEquals("Content", resultSet?.getString("text"))
     }
 
@@ -52,7 +50,7 @@ class ExecutorTests {
 
     @Test
     fun insertPrepared() {
-        val query = kqlMySQLInsert<Post, InsertInput> {
+        val prepared = executor?.prepareInsert(InsertInput::class) {
             values {
                 Post::authorId eq 0
                 Post::sticky eq false
@@ -64,18 +62,18 @@ class ExecutorTests {
         }
 
         val input = InsertInput("Prepared Content", "Technology")
+        prepared?.execute(input)
 
-        val prepared = conn?.prepareStatement(query.queryString)!!
-        for ((index, prop) in query.params.withIndex()) {
-            prepared.setAny(index + 1, prop.getter.call(input))
-        }
-
-        prepared.execute()
-
-        val statement = conn?.createStatement()
-        val resultSet = statement?.executeQuery("SELECT * FROM Post")
-        resultSet?.next()
+        val resultSet = selectAllPosts()
         assertEquals("Prepared Content", resultSet?.getString("text"))
         assertEquals("Technology", resultSet?.getString("topic"))
+    }
+
+    private fun selectAllPosts(): ResultSet? {
+        // Use raw jdbc api so we know any error isn't cause by this library
+        val statement = executor?.conn?.createStatement()
+        val resultSet = statement?.executeQuery("SELECT * FROM Post")
+        resultSet?.next()
+        return resultSet
     }
 }
