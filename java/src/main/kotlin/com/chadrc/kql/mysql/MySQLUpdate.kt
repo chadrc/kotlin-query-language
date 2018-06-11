@@ -30,6 +30,7 @@ class MySQLUpdate<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: K
     }
 
     val queryString get() = _queryString
+    val params get() = _params.toList()
 
     private fun makeMathOperation(operation: MathOperation<*>): String {
         val propName = operation.prop.name
