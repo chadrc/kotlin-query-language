@@ -24,4 +24,20 @@ class MySQLCountTests {
 
         assertEquals("SELECT COUNT(*) FROM Post WHERE (ranking>100) AND (topic='Food')", query.queryString)
     }
+
+    class CountInput(val minRanking: Int, val topic: String)
+
+    @Test
+    fun withInput() {
+        val query = kqlMySQLCount<Post, CountInput> {
+            where {
+                Post::ranking gte CountInput::minRanking
+                Post::topic eq CountInput::topic
+            }
+        }
+
+        assertEquals("SELECT COUNT(*) FROM Post WHERE (ranking>=?) AND (topic=?)", query.queryString)
+        assertEquals(query.params[0], CountInput::minRanking)
+        assertEquals(query.params[1], CountInput::topic)
+    }
 }

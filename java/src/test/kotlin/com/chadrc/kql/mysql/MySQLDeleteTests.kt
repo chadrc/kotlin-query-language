@@ -31,4 +31,18 @@ class MySQLDeleteTests {
 
         assertEquals("", query.queryString)
     }
+
+    class DeleteInput(val id: Int)
+
+    @Test
+    fun withInput() {
+        val query = kqlMySQLDelete<Post, DeleteInput> {
+            where {
+                Post::id eq DeleteInput::id
+            }
+        }
+
+        assertEquals("DELETE FROM Post WHERE (id=?)", query.queryString)
+        assertEquals(query.params[0], DeleteInput::id)
+    }
 }

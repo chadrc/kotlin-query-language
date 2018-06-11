@@ -19,6 +19,7 @@ class MySQLDelete<T : Any, I : Any>(private val kClass: KClass<T>, private val i
     }
 
     val queryString get() = _queryString
+    val params get() = _params.toList()
 }
 
 inline fun <reified T : Any, reified I : Any> kqlMySQLDelete(noinline init: DeleteBuilder<T, I>.() -> Unit) = MySQLDelete(T::class, I::class, init)

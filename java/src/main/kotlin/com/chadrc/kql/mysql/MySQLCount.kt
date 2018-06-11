@@ -17,6 +17,7 @@ class MySQLCount<T : Any, I : Any>(private val kClass: KClass<T>, private val in
     }
 
     val queryString get() = _queryString
+    val params get() = _params
 }
 
 inline fun <reified T : Any, reified I : Any> kqlMySQLCount(noinline init: CountBuilder<T, I>.() -> Unit) = MySQLCount(T::class, I::class, init)
