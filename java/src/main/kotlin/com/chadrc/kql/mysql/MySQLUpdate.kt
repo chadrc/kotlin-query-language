@@ -13,12 +13,23 @@ class MySQLUpdate<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: K
         val typeName = kClass.simpleName
         val setStrings = ArrayList<String>()
         for (change in update.changes) {
+            var value: Any? = null
             val str = when (change) {
-                is Assignment<*> -> "${change.prop.name}=${valueToMySQL(change.value)}"
+                is Assignment<*> -> {
+                    value = change.value
+                    "${change.prop.name}=${valueToMySQL(change.value)}"
+                }
                 is Unset<*> -> "${change.prop.name}=NULL"
-                is MathOperation<*> -> makeMathOperation(change)
+                is MathOperation<*> -> {
+                    value = change.value
+                    makeMathOperation(change)
+                }
 
                 else -> throw Error("Unsupported change type ${change::class.simpleName}")
+            }
+
+            if (value != null && value is KProperty<*>) {
+                _params.add(value)
             }
 
             setStrings.add(str)

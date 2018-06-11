@@ -149,4 +149,18 @@ class MySQLUpdateTests {
         assertEquals("UPDATE Post SET topic='Food' WHERE (id=?)", query.queryString)
         assertEquals(query.params[0], UpdateWhereInput::id)
     }
+
+    class UpdateChangeInput(val topic: String, val ranking: Int)
+
+    @Test
+    fun changeInput() {
+        val query = kqlMySQLUpdate<Post, UpdateChangeInput> {
+            Post::topic toValue UpdateChangeInput::topic
+            Post::ranking toValue UpdateChangeInput::ranking
+        }
+
+        assertEquals("UPDATE Post SET topic=?,ranking=?", query.queryString)
+        assertEquals(query.params[0], UpdateChangeInput::topic)
+        assertEquals(query.params[1], UpdateChangeInput::ranking)
+    }
 }
