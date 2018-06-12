@@ -1,9 +1,12 @@
 package com.chadrc.kql.mysql.executor
 
 import com.chadrc.kql.mysql.MySQLInsert
+import com.chadrc.kql.mysql.MySQLSelect
 import com.chadrc.kql.statements.InsertBuilder
+import com.chadrc.kql.statements.SelectBuilder
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.ResultSet
 import kotlin.reflect.KClass
 
 class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
@@ -22,5 +25,11 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
     fun <I : Any> prepareInsert(inputClass: KClass<I>, init: InsertBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
         val insert = MySQLInsert(kClass, inputClass, init)
         return PreparedKQLStatement(_conn, insert)
+    }
+
+    fun select(init: SelectBuilder<T, Any>.() -> Unit): ResultSet? {
+        val select = MySQLSelect(kClass, Any::class, init)
+        val kqlStatement = conn?.createStatement()
+        return kqlStatement?.executeQuery(select.queryString)
     }
 }
