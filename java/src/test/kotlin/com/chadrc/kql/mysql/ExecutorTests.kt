@@ -2,12 +2,12 @@ package com.chadrc.kql.mysql
 
 import com.chadrc.kql.models.Post
 import com.chadrc.kql.mysql.executor.MySQLKQLExecutor
+import com.chadrc.kql.statements.InsertBuilder
 import org.junit.Test
 import java.sql.ResultSet
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
 
 class ExecutorTests {
     private var executor: MySQLKQLExecutor<Post>? = null
@@ -80,21 +80,11 @@ class ExecutorTests {
     @Test
     fun select() {
         executor?.insert {
-            for (i in 0 until 10) {
-                values {
-                    Post::authorId eq 0
-                    Post::text eq "Post $i"
-                    Post::sticky eq false
-                    Post::topic eq "Food"
-                    Post::published eq 0
-                    Post::ranking eq 100 + (i * 10)
-                }
-            }
+            insertSet()
         }
 
         val resultSet = executor?.select {
             fields {
-                +Post::id
                 +Post::text
                 +Post::ranking
             }
@@ -110,14 +100,61 @@ class ExecutorTests {
 
         resultSet?.next()
         for (i in 9 downTo 5) {
-            val id = resultSet?.getInt("id")
             val text = resultSet?.getString("text")
             val ranking = resultSet?.getInt("ranking")
 
-            assertNotEquals(0, id)
             assertEquals("Post $i", text)
             assertEquals(100 + (i * 10), ranking)
             resultSet?.next()
+        }
+    }
+
+    class SelectInput(val minRanking: Int)
+
+    @Test
+    fun selectPrepared() {
+        executor?.insert {
+            insertSet()
+        }
+
+        val prepared = executor?.prepareSelect(SelectInput::class) {
+            fields {
+                +Post::text
+                +Post::ranking
+            }
+
+            where {
+                Post::ranking gt SelectInput::minRanking
+            }
+
+            sort {
+                -Post::ranking
+            }
+        }
+
+        val resultSet = prepared?.executeQuery(SelectInput(140))
+
+        resultSet?.next()
+        for (i in 9 downTo 5) {
+            val text = resultSet?.getString("text")
+            val ranking = resultSet?.getInt("ranking")
+
+            assertEquals("Post $i", text)
+            assertEquals(100 + (i * 10), ranking)
+            resultSet?.next()
+        }
+    }
+
+    private fun InsertBuilder<Post, *>.insertSet() {
+        for (i in 0 until 10) {
+            values {
+                Post::authorId eq 0
+                Post::text eq "Post $i"
+                Post::sticky eq false
+                Post::topic eq "Food"
+                Post::published eq 0
+                Post::ranking eq 100 + (i * 10)
+            }
         }
     }
 }

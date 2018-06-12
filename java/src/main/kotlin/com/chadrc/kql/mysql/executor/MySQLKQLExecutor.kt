@@ -32,4 +32,9 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
         val kqlStatement = conn?.createStatement()
         return kqlStatement?.executeQuery(select.queryString)
     }
+
+    fun <I : Any> prepareSelect(inputClass: KClass<I>, init: SelectBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
+        val select = MySQLSelect(kClass, inputClass, init)
+        return PreparedKQLStatement(_conn, select)
+    }
 }
