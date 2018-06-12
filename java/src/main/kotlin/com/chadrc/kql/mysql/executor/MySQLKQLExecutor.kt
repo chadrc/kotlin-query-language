@@ -1,7 +1,9 @@
 package com.chadrc.kql.mysql.executor
 
+import com.chadrc.kql.mysql.MySQLCount
 import com.chadrc.kql.mysql.MySQLInsert
 import com.chadrc.kql.mysql.MySQLSelect
+import com.chadrc.kql.statements.CountBuilder
 import com.chadrc.kql.statements.InsertBuilder
 import com.chadrc.kql.statements.SelectBuilder
 import java.sql.Connection
@@ -36,5 +38,16 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
     fun <I : Any> prepareSelect(inputClass: KClass<I>, init: SelectBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
         val select = MySQLSelect(kClass, inputClass, init)
         return PreparedKQLStatement(_conn, select)
+    }
+
+    fun count(init: CountBuilder<T, Any>.() -> Unit): ResultSet? {
+        val select = MySQLCount(kClass, Any::class, init)
+        val kqlStatement = conn?.createStatement()
+        return kqlStatement?.executeQuery(select.queryString)
+    }
+
+    fun <I : Any> prepareCount(inputClass: KClass<I>, init: CountBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
+        val count = MySQLCount(kClass, inputClass, init)
+        return PreparedKQLStatement(_conn, count)
     }
 }

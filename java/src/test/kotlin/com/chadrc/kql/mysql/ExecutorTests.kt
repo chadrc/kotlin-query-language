@@ -145,6 +145,40 @@ class ExecutorTests {
         }
     }
 
+    @Test
+    fun count() {
+        executor?.insert { insertSet() }
+
+        val resultSet = executor?.count {
+            where {
+                Post::ranking gt 140
+            }
+        }
+
+        resultSet?.next()
+        val count = resultSet?.getInt("COUNT(*)")
+
+        assertEquals(5, count)
+    }
+
+    @Test
+    fun preparedCount() {
+        executor?.insert { insertSet() }
+
+        val prepared = executor?.prepareCount(SelectInput::class) {
+            where {
+                Post::ranking gt SelectInput::minRanking
+            }
+        }
+
+        val resultSet = prepared?.executeQuery(SelectInput(140))
+
+        resultSet?.next()
+        val count = resultSet?.getInt("COUNT(*)")
+
+        assertEquals(5, count)
+    }
+
     private fun InsertBuilder<Post, *>.insertSet() {
         for (i in 0 until 10) {
             values {
