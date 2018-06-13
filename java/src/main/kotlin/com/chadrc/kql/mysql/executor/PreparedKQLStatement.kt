@@ -9,10 +9,9 @@ class PreparedKQLStatement<T>(
         private val statement: MySQLPreparable
 ) : PreparedStatement by preparedStatement {
 
-    fun execute(input: T): Int {
+    fun execute(input: T): Boolean? {
         setParams(input)
-        execute()
-        return updateCount
+        return execute()
     }
 
     fun executeQuery(input: T): ResultSet? {
