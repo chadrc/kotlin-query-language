@@ -8,9 +8,10 @@ import java.sql.ResultSet
 class PreparedKQLStatement<T>(conn: Connection, private val statement: MySQLPreparable) {
     private val preparedStatement: PreparedStatement = conn.prepareStatement(statement.queryString)
 
-    fun execute(input: T) {
+    fun execute(input: T): Int {
         setParams(input)
         preparedStatement.execute()
+        return preparedStatement.updateCount
     }
 
     fun executeQuery(input: T): ResultSet? {

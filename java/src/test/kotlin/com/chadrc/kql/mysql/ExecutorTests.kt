@@ -179,6 +179,38 @@ class ExecutorTests {
         assertEquals(5, count)
     }
 
+    @Test
+    fun update() {
+        executor?.insert { insertSet() }
+
+        val result = executor?.update {
+            Post::text toValue "Updated Value"
+
+            where {
+                Post::ranking gt 140
+            }
+        }
+
+        assertEquals(5, result)
+
+        val resultSet = executor?.select {
+            fields {
+                -Post::author
+            }
+
+            where {
+                Post::text eq "Updated Value"
+            }
+        }
+
+        var count = 0
+        while (resultSet?.next()!!) {
+            count++
+        }
+
+        assertEquals(5, count)
+    }
+
     private fun InsertBuilder<Post, *>.insertSet() {
         for (i in 0 until 10) {
             values {

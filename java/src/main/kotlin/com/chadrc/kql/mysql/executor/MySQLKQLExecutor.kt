@@ -3,9 +3,11 @@ package com.chadrc.kql.mysql.executor
 import com.chadrc.kql.mysql.MySQLCount
 import com.chadrc.kql.mysql.MySQLInsert
 import com.chadrc.kql.mysql.MySQLSelect
+import com.chadrc.kql.mysql.MySQLUpdate
 import com.chadrc.kql.statements.CountBuilder
 import com.chadrc.kql.statements.InsertBuilder
 import com.chadrc.kql.statements.SelectBuilder
+import com.chadrc.kql.statements.UpdateBuilder
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
@@ -49,5 +51,11 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
     fun <I : Any> prepareCount(inputClass: KClass<I>, init: CountBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
         val count = MySQLCount(kClass, inputClass, init)
         return PreparedKQLStatement(_conn, count)
+    }
+
+    fun update(init: UpdateBuilder<T, Any>.() -> Unit): Int? {
+        val update = MySQLUpdate(kClass, Any::class, init)
+        val kqlStatement = conn?.createStatement()
+        return kqlStatement?.executeUpdate(update.queryString)
     }
 }
