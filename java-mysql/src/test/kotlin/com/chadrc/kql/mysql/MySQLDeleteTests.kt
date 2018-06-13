@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 class MySQLDeleteTests {
     @Test
     fun deleteCondition() {
-        val query = kqlMySQLDelete<Post, Any> {
+        val query = mySQLDelete<Post, Any> {
             where {
                 Post::id eq 1
             }
@@ -18,7 +18,7 @@ class MySQLDeleteTests {
 
     @Test
     fun deleteAll() {
-        val query = kqlMySQLDelete<Post, Any> {
+        val query = mySQLDelete<Post, Any> {
             all()
         }
 
@@ -27,7 +27,7 @@ class MySQLDeleteTests {
 
     @Test
     fun blankWithNoWhereOrAll() {
-        val query = kqlMySQLDelete<Post, Any> { }
+        val query = mySQLDelete<Post, Any> { }
 
         assertEquals("", query.queryString)
     }
@@ -36,7 +36,7 @@ class MySQLDeleteTests {
 
     @Test
     fun withInput() {
-        val query = kqlMySQLDelete<Post, DeleteInput> {
+        val query = mySQLDelete<Post, DeleteInput> {
             where {
                 Post::id eq DeleteInput::id
             }

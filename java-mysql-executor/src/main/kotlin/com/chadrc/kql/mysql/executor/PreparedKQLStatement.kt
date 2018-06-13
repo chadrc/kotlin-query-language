@@ -1,12 +1,13 @@
 package com.chadrc.kql.mysql.executor
 
+import com.chadrc.kql.mysql.MySQLStatement
 import com.chadrc.kql.mysql.setAny
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 
 class PreparedKQLStatement<T>(
         private val preparedStatement: PreparedStatement,
-        private val statement: MySQLPreparable
+        private val statement: MySQLStatement
 ) : PreparedStatement by preparedStatement {
 
     fun execute(input: T): Boolean? {

@@ -8,7 +8,7 @@ class MySQLUpdateTests {
 
     @Test
     fun updateSingleValue() {
-        val query = kqlMySQLUpdate<Post, Any> {
+        val query = mySQLUpdate<Post, Any> {
             Post::topic toValue "Food"
         }
 
@@ -17,7 +17,7 @@ class MySQLUpdateTests {
 
     @Test
     fun updateMultipleValues() {
-        val query = kqlMySQLUpdate<Post, Any> {
+        val query = mySQLUpdate<Post, Any> {
             Post::topic toValue "Food"
             Post::sticky toValue true
         }
@@ -27,7 +27,7 @@ class MySQLUpdateTests {
 
     @Test
     fun updateWithConditions() {
-        val query = kqlMySQLUpdate<Post, Any> {
+        val query = mySQLUpdate<Post, Any> {
             Post::topic toValue "Food"
             Post::sticky toValue true
 
@@ -41,11 +41,11 @@ class MySQLUpdateTests {
 
     @Test
     fun unsetUpdate() {
-        val unary = kqlMySQLUpdate<Post, Any> {
+        val unary = mySQLUpdate<Post, Any> {
             -Post::topic
         }
 
-        val keyword = kqlMySQLUpdate<Post, Any> {
+        val keyword = mySQLUpdate<Post, Any> {
             unset(Post::topic)
         }
 
@@ -57,11 +57,11 @@ class MySQLUpdateTests {
 
     @Test
     fun addOperation() {
-        val operator = kqlMySQLUpdate<Post, Any> {
+        val operator = mySQLUpdate<Post, Any> {
             Post::ranking += 10
         }
 
-        val keyword = kqlMySQLUpdate<Post, Any> {
+        val keyword = mySQLUpdate<Post, Any> {
             Post::ranking add 10
         }
 
@@ -73,11 +73,11 @@ class MySQLUpdateTests {
 
     @Test
     fun subOperation() {
-        val operator = kqlMySQLUpdate<Post, Any> {
+        val operator = mySQLUpdate<Post, Any> {
             Post::ranking -= 10
         }
 
-        val keyword = kqlMySQLUpdate<Post, Any> {
+        val keyword = mySQLUpdate<Post, Any> {
             Post::ranking sub 10
         }
 
@@ -89,11 +89,11 @@ class MySQLUpdateTests {
 
     @Test
     fun mulOperation() {
-        val operator = kqlMySQLUpdate<Post, Any> {
+        val operator = mySQLUpdate<Post, Any> {
             Post::ranking *= 10
         }
 
-        val keyword = kqlMySQLUpdate<Post, Any> {
+        val keyword = mySQLUpdate<Post, Any> {
             Post::ranking mul 10
         }
 
@@ -105,11 +105,11 @@ class MySQLUpdateTests {
 
     @Test
     fun divOperation() {
-        val operator = kqlMySQLUpdate<Post, Any> {
+        val operator = mySQLUpdate<Post, Any> {
             Post::ranking /= 10
         }
 
-        val keyword = kqlMySQLUpdate<Post, Any> {
+        val keyword = mySQLUpdate<Post, Any> {
             Post::ranking div 10
         }
 
@@ -121,11 +121,11 @@ class MySQLUpdateTests {
 
     @Test
     fun remOperation() {
-        val operator = kqlMySQLUpdate<Post, Any> {
+        val operator = mySQLUpdate<Post, Any> {
             Post::ranking %= 10
         }
 
-        val keyword = kqlMySQLUpdate<Post, Any> {
+        val keyword = mySQLUpdate<Post, Any> {
             Post::ranking rem 10
         }
 
@@ -139,7 +139,7 @@ class MySQLUpdateTests {
 
     @Test
     fun whereInput() {
-        val query = kqlMySQLUpdate<Post, UpdateWhereInput> {
+        val query = mySQLUpdate<Post, UpdateWhereInput> {
             Post::topic toValue "Food"
             where {
                 Post::id eq UpdateWhereInput::id
@@ -154,7 +154,7 @@ class MySQLUpdateTests {
 
     @Test
     fun changeInput() {
-        val query = kqlMySQLUpdate<Post, UpdateChangeInput> {
+        val query = mySQLUpdate<Post, UpdateChangeInput> {
             Post::topic toValue UpdateChangeInput::topic
             Post::ranking toValue UpdateChangeInput::ranking
         }

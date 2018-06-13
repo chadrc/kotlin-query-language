@@ -55,8 +55,8 @@ class ExecutorTests {
                 Post::sticky eq false
                 Post::published eq 0
                 Post::ranking eq 100
-                Post::text eq InsertInput::text
-                Post::topic eq InsertInput::topic
+                Post::text eq com.chadrc.kql.mysql.ExecutorTests.InsertInput::text
+                Post::topic eq com.chadrc.kql.mysql.ExecutorTests.InsertInput::topic
             }
         }
 
@@ -124,7 +124,7 @@ class ExecutorTests {
             }
 
             where {
-                Post::ranking gt SelectInput::minRanking
+                Post::ranking gt com.chadrc.kql.mysql.ExecutorTests.SelectInput::minRanking
             }
 
             sort {
@@ -167,7 +167,7 @@ class ExecutorTests {
 
         val prepared = executor?.prepareCount(SelectInput::class) {
             where {
-                Post::ranking gt SelectInput::minRanking
+                Post::ranking gt com.chadrc.kql.mysql.ExecutorTests.SelectInput::minRanking
             }
         }
 
@@ -218,7 +218,7 @@ class ExecutorTests {
         executor?.insert { insertSet() }
 
         val prepared = executor?.prepareUpdate(UpdateTextInput::class) {
-            Post::text toValue UpdateTextInput::text
+            Post::text toValue com.chadrc.kql.mysql.ExecutorTests.UpdateTextInput::text
 
             where {
                 Post::ranking gt 140
@@ -268,7 +268,7 @@ class ExecutorTests {
 
         val prepared = executor?.prepareDelete(DeleteInput::class) {
             where {
-                Post::ranking gt DeleteInput::minRanking
+                Post::ranking gt com.chadrc.kql.mysql.ExecutorTests.DeleteInput::minRanking
             }
         }
 

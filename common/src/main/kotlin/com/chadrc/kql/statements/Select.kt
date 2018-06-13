@@ -6,17 +6,17 @@ import com.chadrc.kql.clauses.WhereClauseBuilder
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-class Select<T : Any, I : Any>(private val kClass: KClass<T>, private val inputClass: KClass<I>, init: SelectBuilder<T, I>.() -> Unit) {
-    private val selectBuilder: SelectBuilder<T, I> = SelectBuilder(kClass, inputClass)
+class Select<T : Any, I : Any>(private val _kClass: KClass<T>, private val inputClass: KClass<I>, init: SelectBuilder<T, I>.() -> Unit) {
+    private val selectBuilder: SelectBuilder<T, I> = SelectBuilder(_kClass, inputClass)
 
     class Field(val prop: KProperty<*>, val subFields: List<Field>? = null)
 
     val fields: List<Field>
         get() {
-            val allProperties = kClass.members.filterIsInstance<KProperty<*>>()
+            val allProperties = _kClass.members.filterIsInstance<KProperty<*>>()
             val clause = selectBuilder.fieldClause ?: return allProperties.map { Field(it) }
 
-            return getProperties(kClass, clause)
+            return getProperties(_kClass, clause)
         }
 
     val conditions: List<WhereClauseBuilder.Condition> get() = selectBuilder.whereClause?.conditions ?: listOf()
@@ -26,6 +26,8 @@ class Select<T : Any, I : Any>(private val kClass: KClass<T>, private val inputC
     val limit get() = selectBuilder.limit
 
     val offset get() = selectBuilder.offset
+
+    val kClass get() = _kClass
 
     init {
         selectBuilder.init()
