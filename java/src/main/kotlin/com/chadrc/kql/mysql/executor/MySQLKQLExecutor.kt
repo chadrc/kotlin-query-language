@@ -22,7 +22,7 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
 
     fun <I : Any> prepareInsert(inputClass: KClass<I>, init: InsertBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
         val insert = MySQLInsert(kClass, inputClass, init)
-        return PreparedKQLStatement(_conn, insert)
+        return PreparedKQLStatement(_conn.prepareStatement(insert.queryString), insert)
     }
 
     fun select(init: SelectBuilder<T, Any>.() -> Unit): ResultSet? {
@@ -33,7 +33,7 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
 
     fun <I : Any> prepareSelect(inputClass: KClass<I>, init: SelectBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
         val select = MySQLSelect(kClass, inputClass, init)
-        return PreparedKQLStatement(_conn, select)
+        return PreparedKQLStatement(_conn.prepareStatement(select.queryString), select)
     }
 
     fun count(init: CountBuilder<T, Any>.() -> Unit): ResultSet? {
@@ -44,7 +44,7 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
 
     fun <I : Any> prepareCount(inputClass: KClass<I>, init: CountBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
         val count = MySQLCount(kClass, inputClass, init)
-        return PreparedKQLStatement(_conn, count)
+        return PreparedKQLStatement(_conn.prepareStatement(count.queryString), count)
     }
 
     fun update(init: UpdateBuilder<T, Any>.() -> Unit): Int? {
@@ -54,8 +54,8 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
     }
 
     fun <I : Any> prepareUpdate(inputClass: KClass<I>, init: UpdateBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
-        val count = MySQLUpdate(kClass, inputClass, init)
-        return PreparedKQLStatement(_conn, count)
+        val update = MySQLUpdate(kClass, inputClass, init)
+        return PreparedKQLStatement(_conn.prepareStatement(update.queryString), update)
     }
 
     fun delete(init: DeleteBuilder<T, Any>.() -> Unit): Int? {
@@ -65,7 +65,7 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
     }
 
     fun <I : Any> prepareDelete(inputClass: KClass<I>, init: DeleteBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
-        val count = MySQLDelete(kClass, inputClass, init)
-        return PreparedKQLStatement(_conn, count)
+        val delete = MySQLDelete(kClass, inputClass, init)
+        return PreparedKQLStatement(_conn.prepareStatement(delete.queryString), delete)
     }
 }
