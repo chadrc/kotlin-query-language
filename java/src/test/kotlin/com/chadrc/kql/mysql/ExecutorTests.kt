@@ -247,6 +247,36 @@ class ExecutorTests {
         assertEquals(5, count)
     }
 
+    @Test
+    fun delete() {
+        executor?.insert { insertSet() }
+
+        val result = executor?.delete {
+            where {
+                Post::ranking gt 140
+            }
+        }
+
+        assertEquals(5, result)
+    }
+
+    class DeleteInput(val minRanking: Int)
+
+    @Test
+    fun preparedDelete() {
+        executor?.insert { insertSet() }
+
+        val prepared = executor?.prepareDelete(DeleteInput::class) {
+            where {
+                Post::ranking gt DeleteInput::minRanking
+            }
+        }
+
+        val result = prepared?.executeUpdate(DeleteInput(140))
+
+        assertEquals(5, result)
+    }
+
     private fun InsertBuilder<Post, *>.insertSet() {
         for (i in 0 until 10) {
             values {

@@ -1,13 +1,7 @@
 package com.chadrc.kql.mysql.executor
 
-import com.chadrc.kql.mysql.MySQLCount
-import com.chadrc.kql.mysql.MySQLInsert
-import com.chadrc.kql.mysql.MySQLSelect
-import com.chadrc.kql.mysql.MySQLUpdate
-import com.chadrc.kql.statements.CountBuilder
-import com.chadrc.kql.statements.InsertBuilder
-import com.chadrc.kql.statements.SelectBuilder
-import com.chadrc.kql.statements.UpdateBuilder
+import com.chadrc.kql.mysql.*
+import com.chadrc.kql.statements.*
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
@@ -61,6 +55,17 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
 
     fun <I : Any> prepareUpdate(inputClass: KClass<I>, init: UpdateBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
         val count = MySQLUpdate(kClass, inputClass, init)
+        return PreparedKQLStatement(_conn, count)
+    }
+
+    fun delete(init: DeleteBuilder<T, Any>.() -> Unit): Int? {
+        val delete = MySQLDelete(kClass, Any::class, init)
+        val kqlStatement = conn?.createStatement()
+        return kqlStatement?.executeUpdate(delete.queryString)
+    }
+
+    fun <I : Any> prepareDelete(inputClass: KClass<I>, init: DeleteBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
+        val count = MySQLDelete(kClass, inputClass, init)
         return PreparedKQLStatement(_conn, count)
     }
 }
