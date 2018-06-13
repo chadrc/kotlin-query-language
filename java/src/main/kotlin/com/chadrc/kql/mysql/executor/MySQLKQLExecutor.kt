@@ -58,4 +58,9 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
         val kqlStatement = conn?.createStatement()
         return kqlStatement?.executeUpdate(update.queryString)
     }
+
+    fun <I : Any> prepareUpdate(inputClass: KClass<I>, init: UpdateBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
+        val count = MySQLUpdate(kClass, inputClass, init)
+        return PreparedKQLStatement(_conn, count)
+    }
 }

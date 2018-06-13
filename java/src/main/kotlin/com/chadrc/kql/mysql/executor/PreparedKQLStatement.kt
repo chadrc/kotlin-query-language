@@ -19,6 +19,11 @@ class PreparedKQLStatement<T>(conn: Connection, private val statement: MySQLPrep
         return preparedStatement.executeQuery()
     }
 
+    fun executeUpdate(input: T): Int? {
+        setParams(input)
+        return preparedStatement.executeUpdate()
+    }
+
     private fun setParams(input: T) {
         for ((index, prop) in statement.params.withIndex()) {
             preparedStatement.setAny(index + 1, prop.getter.call(input))

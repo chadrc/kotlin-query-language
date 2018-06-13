@@ -211,6 +211,42 @@ class ExecutorTests {
         assertEquals(5, count)
     }
 
+    class UpdateTextInput(val text: String)
+
+    @Test
+    fun preparedUpdate() {
+        executor?.insert { insertSet() }
+
+        val prepared = executor?.prepareUpdate(UpdateTextInput::class) {
+            Post::text toValue UpdateTextInput::text
+
+            where {
+                Post::ranking gt 140
+            }
+        }
+
+        val result = prepared?.executeUpdate(UpdateTextInput("Updated Value"))
+
+        assertEquals(5, result)
+
+        val resultSet = executor?.select {
+            fields {
+                -Post::author
+            }
+
+            where {
+                Post::text eq "Updated Value"
+            }
+        }
+
+        var count = 0
+        while (resultSet?.next()!!) {
+            count++
+        }
+
+        assertEquals(5, count)
+    }
+
     private fun InsertBuilder<Post, *>.insertSet() {
         for (i in 0 until 10) {
             values {

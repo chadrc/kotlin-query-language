@@ -1,10 +1,11 @@
 package com.chadrc.kql.mysql
 
+import com.chadrc.kql.mysql.executor.MySQLPreparable
 import com.chadrc.kql.statements.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-class MySQLUpdate<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: KClass<I>, init: UpdateBuilder<T, I>.() -> Unit) {
+class MySQLUpdate<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: KClass<I>, init: UpdateBuilder<T, I>.() -> Unit) : MySQLPreparable {
     private val update = Update(kClass, inputClass, init)
     private val _params = ArrayList<KProperty<*>>()
     private val _queryString: String
@@ -40,8 +41,8 @@ class MySQLUpdate<T : Any, I : Any>(private val kClass: KClass<T>, inputClass: K
         _queryString = "UPDATE $typeName SET $allSets$whereClause"
     }
 
-    val queryString get() = _queryString
-    val params get() = _params.toList()
+    override val queryString get() = _queryString
+    override val params get() = _params.toList()
 
     private fun makeMathOperation(operation: MathOperation<*>): String {
         val propName = operation.prop.name
