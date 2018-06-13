@@ -5,7 +5,7 @@ import com.chadrc.kql.mysql.setAny
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 
-class PreparedKQLStatement<T>(
+class PreparedStatement<T>(
         private val preparedStatement: PreparedStatement,
         private val statement: MySQLStatement
 ) : PreparedStatement by preparedStatement {

@@ -20,9 +20,9 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
         kqlStatement?.execute(insert.queryString)
     }
 
-    fun <I : Any> prepareInsert(inputClass: KClass<I>, init: InsertBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
+    fun <I : Any> prepareInsert(inputClass: KClass<I>, init: InsertBuilder<T, I>.() -> Unit): PreparedStatement<I> {
         val insert = MySQLStatement(Insert(kClass, inputClass, init))
-        return PreparedKQLStatement(_conn.prepareStatement(insert.queryString), insert)
+        return PreparedStatement(_conn.prepareStatement(insert.queryString), insert)
     }
 
     fun select(init: SelectBuilder<T, Any>.() -> Unit): ResultSet? {
@@ -31,9 +31,9 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
         return kqlStatement?.executeQuery(select.queryString)
     }
 
-    fun <I : Any> prepareSelect(inputClass: KClass<I>, init: SelectBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
+    fun <I : Any> prepareSelect(inputClass: KClass<I>, init: SelectBuilder<T, I>.() -> Unit): PreparedStatement<I> {
         val select = MySQLStatement(Select(kClass, inputClass, init))
-        return PreparedKQLStatement(_conn.prepareStatement(select.queryString), select)
+        return PreparedStatement(_conn.prepareStatement(select.queryString), select)
     }
 
     fun count(init: CountBuilder<T, Any>.() -> Unit): ResultSet? {
@@ -42,9 +42,9 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
         return kqlStatement?.executeQuery(select.queryString)
     }
 
-    fun <I : Any> prepareCount(inputClass: KClass<I>, init: CountBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
+    fun <I : Any> prepareCount(inputClass: KClass<I>, init: CountBuilder<T, I>.() -> Unit): PreparedStatement<I> {
         val count = MySQLStatement(Count(kClass, inputClass, init))
-        return PreparedKQLStatement(_conn.prepareStatement(count.queryString), count)
+        return PreparedStatement(_conn.prepareStatement(count.queryString), count)
     }
 
     fun update(init: UpdateBuilder<T, Any>.() -> Unit): Int? {
@@ -53,9 +53,9 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
         return kqlStatement?.executeUpdate(update.queryString)
     }
 
-    fun <I : Any> prepareUpdate(inputClass: KClass<I>, init: UpdateBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
+    fun <I : Any> prepareUpdate(inputClass: KClass<I>, init: UpdateBuilder<T, I>.() -> Unit): PreparedStatement<I> {
         val update = MySQLStatement(Update(kClass, inputClass, init))
-        return PreparedKQLStatement(_conn.prepareStatement(update.queryString), update)
+        return PreparedStatement(_conn.prepareStatement(update.queryString), update)
     }
 
     fun delete(init: DeleteBuilder<T, Any>.() -> Unit): Int? {
@@ -64,8 +64,8 @@ class MySQLKQLExecutor<T : Any>(private val kClass: KClass<T>) {
         return kqlStatement?.executeUpdate(delete.queryString)
     }
 
-    fun <I : Any> prepareDelete(inputClass: KClass<I>, init: DeleteBuilder<T, I>.() -> Unit): PreparedKQLStatement<I> {
+    fun <I : Any> prepareDelete(inputClass: KClass<I>, init: DeleteBuilder<T, I>.() -> Unit): PreparedStatement<I> {
         val delete = MySQLStatement(Delete(kClass, inputClass, init))
-        return PreparedKQLStatement(_conn.prepareStatement(delete.queryString), delete)
+        return PreparedStatement(_conn.prepareStatement(delete.queryString), delete)
     }
 }
