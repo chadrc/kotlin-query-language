@@ -3,4 +3,5 @@ include 'common'
 include 'java-mysql'
 include 'js-node'
 include 'java-mysql-executor'
+include 'java-mongo'
 

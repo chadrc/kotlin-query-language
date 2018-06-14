@@ -13,7 +13,7 @@ plugins {
     id 'java'
 }
 
-version 'unspecified'
+version '1.0-SNAPSHOT'
 
 apply plugin: 'kotlin-platform-jvm'
 
@@ -25,9 +25,9 @@ repositories {
 
 dependencies {
     expectedBy project(":common")
-    compile project(":java-mysql")
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile "mysql:mysql-connector-java:8.0.11"
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.2.41'
+    compile 'org.mongodb:mongodb-driver-sync:3.7.1'
 
     testCompile "junit:junit:4.12"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
