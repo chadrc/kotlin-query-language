@@ -4,6 +4,7 @@ import com.chadrc.kql.clauses.FieldSelector
 import com.chadrc.kql.clauses.Sort
 import com.chadrc.kql.clauses.WhereClauseBuilder
 import com.chadrc.kql.utils.getMembers
+import com.chadrc.kql.utils.returnTypeOfProp
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -50,7 +51,7 @@ class Select<T : Any, I : Any>(private val _kClass: KClass<T>, private val input
             if (fieldProp?.includedFields != null
                     || fieldProp?.excludedFields != null) {
                 @Suppress("UNCHECKED_CAST")
-                val classType = prop.returnType.classifier as? KClass<Any>
+                val classType = returnTypeOfProp(prop)
                 if (classType != null) {
                     Field(prop, getProperties(classType, fieldProp))
                 } else {
