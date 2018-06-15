@@ -3,6 +3,7 @@ package com.chadrc.kql.statements
 import com.chadrc.kql.clauses.FieldSelector
 import com.chadrc.kql.clauses.Sort
 import com.chadrc.kql.clauses.WhereClauseBuilder
+import com.chadrc.kql.utils.getMembers
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -13,7 +14,7 @@ class Select<T : Any, I : Any>(private val _kClass: KClass<T>, private val input
 
     val fields: List<Field>
         get() {
-            val allProperties = _kClass.members.filterIsInstance<KProperty<*>>()
+            val allProperties = getMembers(_kClass).filterIsInstance<KProperty<*>>()
             val clause = selectBuilder.fieldClause ?: return allProperties.map { Field(it) }
 
             return getProperties(_kClass, clause)
@@ -34,7 +35,7 @@ class Select<T : Any, I : Any>(private val _kClass: KClass<T>, private val input
     }
 
     private fun <T : Any> getProperties(kClass: KClass<T>, selector: FieldSelector): List<Field> {
-        val allProperties = kClass.members.filterIsInstance<KProperty<*>>()
+        val allProperties = getMembers(kClass).filterIsInstance<KProperty<*>>()
 
         // First, determine which fields will be used
         val props = if (selector.excludedFields?.size ?: 0 > 0) {
