@@ -3,6 +3,11 @@
 .gradle
 build/
 
+### Node
+
+node_modules/
+package-lock.json
+
 # Ignore Gradle GUI config
 gradle-app.setting
 
