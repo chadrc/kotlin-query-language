@@ -2,7 +2,7 @@ package com.chadrc.kql.clauses
 
 import com.chadrc.kql.exceptions.LeftPropOperandNotOnQueryClass
 import com.chadrc.kql.exceptions.RightPropOperandNotOnInputClass
-import com.chadrc.kql.utils.getMembers
+import com.chadrc.kql.utils.classHasProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -149,10 +149,10 @@ class WhereClauseBuilder<T : Any, I : Any>(private val kClass: KClass<T>, privat
     }
 
     private fun assertOnClass(prop: KProperty<*>) {
-        if (!getMembers(kClass).contains(prop)) throw LeftPropOperandNotOnQueryClass(prop, kClass)
+        if (!classHasProperty(kClass, prop)) throw LeftPropOperandNotOnQueryClass(prop, kClass)
     }
 
     private fun assertOnInputClass(prop: KProperty<*>) {
-        if (!getMembers(inputClass).contains(prop)) throw RightPropOperandNotOnInputClass(prop, inputClass)
+        if (!classHasProperty(inputClass, prop)) throw RightPropOperandNotOnInputClass(prop, inputClass)
     }
 }

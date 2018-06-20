@@ -22,12 +22,15 @@ apply plugin: 'com.moowork.node'
 
 repositories {
     mavenCentral()
+    maven { url "https://kotlin.bintray.com/kotlin-js-wrappers" }
+    maven { url "https://kotlin.bintray.com/kotlinx.html" }
 }
 
 dependencies {
     expectedBy project(":common")
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile 'org.jetbrains:kotlin-extensions:1.0.1-pre.32-kotlin-1.2.41'
 
     testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 }
