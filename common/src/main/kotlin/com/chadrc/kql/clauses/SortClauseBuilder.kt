@@ -26,7 +26,7 @@ class SortClauseBuilder {
     }
 
     private fun assertPropertyNotSorted(prop: KProperty<*>) {
-        val existing = _sorts.find { it.prop == prop }
+        val existing = _sorts.find { it.prop.name == prop.name }
         if (existing != null) {
             throw CannotSortSamePropertyTwice()
         }
