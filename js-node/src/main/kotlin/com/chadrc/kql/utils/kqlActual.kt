@@ -37,15 +37,7 @@ actual fun returnTypeOfProp(type: KProperty<*>): KClass<*>? {
 }
 
 actual fun classHasProperty(kClass: KClass<*>, kProperty: KProperty<*>): Boolean {
-    // Using our own implementation, check names
-    val nameToCheck = if (kProperty is MockProperty) {
-        kProperty.name
-    } else {
-        // Using native kotlin to get property, i.e. Any::property
-        // Name will be prop 'callableName' after cast to dynamic
-        val dProp: dynamic = kProperty
-        dProp.callableName
-    }
-
-    return getMembers(kClass).find { it.name == nameToCheck } != null
+    // Need to check by name, cause kProperty is likely a native impl
+    // and getMembers returns MockProperty instances
+    return getMembers(kClass).find { it.name == kProperty.name } != null
 }
