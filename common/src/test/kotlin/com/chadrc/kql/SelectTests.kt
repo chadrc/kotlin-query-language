@@ -63,6 +63,7 @@ class SelectTests {
 
     @Test
     fun testSubObjectWithFields() {
+        setup()
         val query = kqlSelect<Post, Any> {
             fields {
                 Post::author withFields {

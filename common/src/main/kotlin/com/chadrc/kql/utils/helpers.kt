@@ -5,6 +5,6 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 expect fun getMembers(kClass: KClass<*>): Collection<KCallable<*>>
-expect fun returnTypeOfProp(type: KProperty<*>): KClass<*>?
+expect fun <T : Any> KClass<T>.returnTypeOfProp(type: KProperty<*>): KClass<*>?
 
 expect fun classHasProperty(kClass: KClass<*>, kProperty: KProperty<*>): Boolean

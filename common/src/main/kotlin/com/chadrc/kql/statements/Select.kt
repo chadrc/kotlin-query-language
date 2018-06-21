@@ -50,8 +50,7 @@ class Select<T : Any, I : Any>(private val _kClass: KClass<T>, private val input
             val fieldProp = selector.includedFields?.find { it.prop.name == prop.name }
             if (fieldProp?.includedFields != null
                     || fieldProp?.excludedFields != null) {
-                @Suppress("UNCHECKED_CAST")
-                val classType = returnTypeOfProp(prop)
+                val classType = kClass.returnTypeOfProp(prop)
                 if (classType != null) {
                     Field(prop, getProperties(classType, fieldProp))
                 } else {
